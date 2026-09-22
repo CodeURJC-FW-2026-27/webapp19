@@ -25,6 +25,8 @@
     * `price` (Number): Price in euros (rent per month).
     * `location` (String): City or neighborhood where the property is located.
     * `description` (String): Detailed description of the property features.
+    * `rooms` (Number): Number of bedrooms in the property.
+    * `area` (Number): Total area of the property in square meters.
 
 * **Secondary Entity: Review**
   * Description: Represents comments, ratings, and feedback left by users regarding a specific property.
@@ -40,6 +42,5 @@
 * **Review** entities focus primarily on text comments and ratings.
 
 ### Search, Filtering, and Categorization
-
-* **Search Engine:** A text input box allowing users to search for properties whose title or location contains the specified query string.
-* **Categorization:** Properties are categorized by price ranges or location zones, accessible directly from the navigation menu.
+* **Search Engine**: A text input box allowing users to search for properties whose title or location contains the specified query string.
+* **Categorization:** Properties are categorized by price ranges, location zones, or the number of rooms, accessible from the navigation menu. 
