@@ -10,7 +10,7 @@
 | Rodrigo | Fernández de Córdoba García | r.fernandezgar.2023@alumnos.urjc.es | RodrigoFDCG |
 | Enrique | Aldama Moradillo | e.aldama.2023@alumnos.urjc.es | EnriqueAldama |
 
-* **Trello Board / Coordination Tool:** [Link to Trello or coordination board] (falta por añadir)
+* **Trello Board / Coordination Tool:** https://trello.com/b/ERNrTVPC/housing-rental-web
 
 ---
 
