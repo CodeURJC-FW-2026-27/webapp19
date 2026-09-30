@@ -1,29 +1,355 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
-        <!-- Page title -->
-        <title> DreamHouse - Principal</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>DreamHouse - Find Your Perfect Property</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Bootstrap icons-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
     </head>
     <body>
-        <!-- Header and navigation menu -->
-        <header>
-            <h1> DreamHouse </h1>
-            <nav>
-                <a href="index.html">Casa</a>
-                <a href="new_property.html">Crear una nueva propiedad</a>
-            </nav>
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container px-4 px-lg-5">
+                <!-- name of the project-->
+                <a class="navbar-brand" href="index.html">DreamHouse</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <!--project navigation links-->
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="new_property.html">Add Property</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="#!">All Properties</a></li>
+                                <li><hr class="dropdown-divider" /></li>
+                                <li><a class="dropdown-item" href="#!">Shared Apartments</a></li>
+                                <li><a class="dropdown-item" href="#!">Full Houses</a></li>
+                                <li><a class="dropdown-item" href="#!">Rooms</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <!-- Search by title or location -->
+                   <form class="d-flex" role="search">
+                        <input class="form-control me-2" type="search" placeholder="Search location or title..." aria-label="Search">
+                        <button class="btn btn-outline-dark" type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+        <!-- Header-->
+        <header class="bg-dark py-5">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                    <h1 class="display-4 fw-bolder">DreamHouse</h1>
+                    <p class="lead fw-normal text-white-50 mb-0">Find your ideal apartment, house, or shared room</p>
+                </div>
+            </div>
         </header>
+        <!-- Section-->
+        <section class="py-5">
+            <div class="container px-4 px-lg-5 mt-5">
+                <!-- Responsive grid layout for property cards-->
+                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                    
+                    <!-- Property card item template-->
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!--Status badge-->
+                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Status</div>
 
-        <!-- Main content area -->
-        <main>
-            <section>
-                <h2> Propiedades destacadas</h2>
-            </section>
-        </main>
+                            <!-- Property image-->
+                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="Property Image Placeholder" />
+                            <!-- Property details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Property title-->
+                                    <h5 class="fw-bolder">Property title</h5>
+                                    <!--Property Location-->
+                                    <p class="text-muted mb-1"> Location</p>
+                                    <!-- Property features (room/size)-->
+                                     <div class="small mb-2"> number of rooms &bull; number of meters square</div>
+                                    <!-- Property price-->
+                                    <span class="fw-bold"> euros/month </span>
+                                </div>
+                            </div>
+                            <!-- Property actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center">
+                                    <a class="btn btn-outline-dark mt-auto" href="property_detail.html">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-        <!-- Footer -->
-        <footer>
-            <p>&copy; 2026 DreamHouse</p>
+
+                    <!-- Property card item template-->
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!--Status badge-->
+                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Status</div>
+
+                            <!-- Property image-->
+                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="Property Image Placeholder" />
+                            <!-- Property details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Property title-->
+                                    <h5 class="fw-bolder">Property title</h5>
+                                    <!--Property Location-->
+                                    <p class="text-muted mb-1"> Location</p>
+                                    <!-- Property features (room/size)-->
+                                     <div class="small mb-2"> number of rooms &bull; number of meters square</div>
+                                    <!-- Property price-->
+                                    <span class="fw-bold"> euros/month </span>
+                                </div>
+                            </div>
+                            <!-- Property actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center">
+                                    <a class="btn btn-outline-dark mt-auto" href="property_detail.html">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Property card item template-->
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!--Status badge-->
+                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Status</div>
+
+                            <!-- Property image-->
+                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="Property Image Placeholder" />
+                            <!-- Property details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Property title-->
+                                    <h5 class="fw-bolder">Property title</h5>
+                                    <!--Property Location-->
+                                    <p class="text-muted mb-1"> Location</p>
+                                    <!-- Property features (room/size)-->
+                                     <div class="small mb-2"> number of rooms &bull; number of meters square</div>
+                                    <!-- Property price-->
+                                    <span class="fw-bold"> euros/month </span>
+                                </div>
+                            </div>
+                            <!-- Property actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center">
+                                    <a class="btn btn-outline-dark mt-auto" href="property_detail.html">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Property card item template-->
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!--Status badge-->
+                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Status</div>
+
+                            <!-- Property image-->
+                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="Property Image Placeholder" />
+                            <!-- Property details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Property title-->
+                                    <h5 class="fw-bolder">Property title</h5>
+                                    <!--Property Location-->
+                                    <p class="text-muted mb-1"> Location</p>
+                                    <!-- Property features (room/size)-->
+                                     <div class="small mb-2"> number of rooms &bull; number of meters square</div>
+                                    <!-- Property price-->
+                                    <span class="fw-bold"> euros/month </span>
+                                </div>
+                            </div>
+                            <!-- Property actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center">
+                                    <a class="btn btn-outline-dark mt-auto" href="property_detail.html">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                    <!-- Property card item template-->
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!--Status badge-->
+                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Status</div>
+
+                            <!-- Property image-->
+                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="Property Image Placeholder" />
+                            <!-- Property details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Property title-->
+                                    <h5 class="fw-bolder">Property title</h5>
+                                    <!--Property Location-->
+                                    <p class="text-muted mb-1"> Location</p>
+                                    <!-- Property features (room/size)-->
+                                     <div class="small mb-2"> number of rooms &bull; number of meters square</div>
+                                    <!-- Property price-->
+                                    <span class="fw-bold"> euros/month </span>
+                                </div>
+                            </div>
+                            <!-- Property actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center">
+                                    <a class="btn btn-outline-dark mt-auto" href="property_detail.html">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                   <!-- Property card item template-->
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!--Status badge-->
+                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Status</div>
+
+                            <!-- Property image-->
+                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="Property Image Placeholder" />
+                            <!-- Property details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Property title-->
+                                    <h5 class="fw-bolder">Property title</h5>
+                                    <!--Property Location-->
+                                    <p class="text-muted mb-1"> Location</p>
+                                    <!-- Property features (room/size)-->
+                                     <div class="small mb-2"> number of rooms &bull; number of meters square</div>
+                                    <!-- Property price-->
+                                    <span class="fw-bold"> euros/month </span>
+                                </div>
+                            </div>
+                            <!-- Property actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center">
+                                    <a class="btn btn-outline-dark mt-auto" href="property_detail.html">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                   <!-- Property card item template-->
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!--Status badge-->
+                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Status</div>
+
+                            <!-- Property image-->
+                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="Property Image Placeholder" />
+                            <!-- Property details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Property title-->
+                                    <h5 class="fw-bolder">Property title</h5>
+                                    <!--Property Location-->
+                                    <p class="text-muted mb-1"> Location</p>
+                                    <!-- Property features (room/size)-->
+                                     <div class="small mb-2"> number of rooms &bull; number of meters square</div>
+                                    <!-- Property price-->
+                                    <span class="fw-bold"> euros/month </span>
+                                </div>
+                            </div>
+                            <!-- Property actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center">
+                                    <a class="btn btn-outline-dark mt-auto" href="property_detail.html">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Property card item template-->
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!--Status badge-->
+                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Status</div>
+
+                            <!-- Property image-->
+                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="Property Image Placeholder" />
+                            <!-- Property details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Property title-->
+                                    <h5 class="fw-bolder">Property title</h5>
+                                    <!--Property Location-->
+                                    <p class="text-muted mb-1"> Location</p>
+                                    <!-- Property features (room/size)-->
+                                     <div class="small mb-2"> number of rooms &bull; number of meters square</div>
+                                    <!-- Property price-->
+                                    <span class="fw-bold"> euros/month </span>
+                                </div>
+                            </div>
+                            <!-- Property actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center">
+                                    <a class="btn btn-outline-dark mt-auto" href="property_detail.html">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Property card item template-->
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!--Status badge-->
+                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Status</div>
+
+                            <!-- Property image-->
+                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="Property Image Placeholder" />
+                            <!-- Property details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Property title-->
+                                    <h5 class="fw-bolder">Property title</h5>
+                                    <!--Property Location-->
+                                    <p class="text-muted mb-1"> Location</p>
+                                    <!-- Property features (room/size)-->
+                                     <div class="small mb-2"> number of rooms &bull; number of meters square</div>
+                                    <!-- Property price-->
+                                    <span class="fw-bold"> euros/month </span>
+                                </div>
+                            </div>
+                            <!-- Property actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center">
+                                    <a class="btn btn-outline-dark mt-auto" href="property_detail.html">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Footer-->
+        <footer class="py-5 bg-dark">
+            <div class="container">
+                <p class="m-0 text-center text-white">Copyright &copy; DreamHouse 2026</p>
+            </div>
         </footer>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="js/scripts.js"></script>
     </body>
 </html>
