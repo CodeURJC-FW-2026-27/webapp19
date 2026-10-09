@@ -55,85 +55,123 @@
         </div>
     </nav>
     <!--Property details-->
-    <section class="py-5">
-        <div class="container px-4 px-lg-5 my-5">
-          <!-- Main Entity Details -->
-           <div class="row gx-4 gx-lg-5 align-items-center">
-              <div class="col-md-6">
-                    <img class="card-img-top mb-5 mb-md-0" src="https://dummyimage.com/600x700/dee2e6/6c757d.jpg" alt="Property Image" />
-             </div>
-             <div class="col-md-6">
-                 <div class="badge bg-success text-white mb-2">Status: Available</div>
-       
-                 <h1 class="display-5 fw-bolder">C. Río Duero 13, 6ºB</h1>
-                  <div class="fs-5 mb-3">
-                       <span>500 euros/month</span>
-                   </div>
-                   <p class="small mb-2"><strong>Location:</strong> Móstoles Sur, Madrid</p>
-                   <p class="small mb-2"><strong>Rooms:</strong> 3 &bull; <strong>Size:</strong> 120 m²</p>
-                   <p class="lead mb-4">Modern and spacious apartment in a residential neighbourhood, easy access to public transport, close to the hospital and the park.</p>
-                   
-                   <!-- Main entity actions -->
-                   <div class="d-flex gap-2 mb-4">
-                       <button class="btn btn-outline-danger" type="button">Delete</button>
-                       <button class="btn btn-outline-secondary" type="button">Edit</button>
-                       <a class="btn btn-primary" href="index.html">Back to Home</a>
-                   </div>
-               </div>
-           </div>
+    <section class="py-3">
+        <div class="container px-4 px-lg-5">
+            <!-- Main Entity Details -->
+            <div class="row gx-4 gx-lg-5 align-items-center">
+                <div class="col-md-6">
+                    <img class="card-img-top mb-5 mb-md-0" src="https://dummyimage.com/600x700/dee2e6/6c757d.jpg"
+                        alt="Property Image" />
+                </div>
+                <div class="col-md-6">
+                    <div class="badge bg-success text-white mb-2">Status: Available</div>
 
-           <hr class="my-5" />
+                    <h1 class="display-5 fw-bolder">C. Río Duero 13, 6ºB</h1>
+                    <div class="fs-5 mb-3">
+                        <span>500 euros/month</span>
+                    </div>
+                    <p class="small mb-2"><strong>Location:</strong> Móstoles Sur, Madrid</p>
+                    <p class="small mb-2"><strong>Rooms:</strong> 3 &bull; <strong>Size:</strong> 120 m²</p>
+                    <p class="lead mb-4">Modern and spacious apartment in a residential neighbourhood, easy access to
+                        public transport, close to the hospital and the park.</p>
 
-           <!-- SECONDARY ENTITY: REVIEWS / COMMENTS -->
-           <div class="row">
-               <div class="col-lg-8 mx-auto">
-                   <h3 class="mb-4">Reviews & Comments</h3>
+                    <!-- Main entity actions -->
+                    <div class="d-flex gap-2 mb-4">
+                        <button class="btn btn-outline-danger" type="button">Delete</button>
+                        <button class="btn btn-outline-secondary" type="button">Edit</button>
+                        <a class="btn btn-primary" href="index.html">Back to Home</a>
+                    </div>
+                </div>
+            </div>
 
-                   <!-- List of secondary entity items -->
-                   <div class="card mb-3">
-                       <div class="card-body">
-                           <div class="d-flex justify-content-between align-items-center mb-2">
-                              <h6 class="fw-bold mb-0">John Smith <span class="text-warning">&#9733;&#9733;&#9733;&#9733;&#9734;</span></h6>
-                              <div>
-                                  <button class="btn btn-sm btn-outline-secondary me-1" type="button">Edit</button>
-                                  <button class="btn btn-sm btn-outline-danger" type="button">Delete</button>
-                               </div>
-                           </div>
-                           <p class="card-text small text-muted">Great apartment, very well located and spacious rooms.</p>
-                      </div>
-                  </div>
+            <hr class="my-5" />
 
-                  <!-- Form to create a new secondary entity item -->
-                   <div class="card mt-4 bg-light">
-                      <div class="card-body">
-                          <h5 class="card-title mb-3">Add a Review</h5>
-                          <form>
-                              <div class="mb-3">
-                                    <label for="authorName" class="form-label">Your Name</label>
-                                    <input type="text" class="form-control" id="authorName" required placeholder="e.g. Mary Lopez">
+            <!-- SECONDARY ENTITY: REVIEWS / COMMENTS -->
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <h3 class="mb-4">Reviews & Comments</h3>
+
+                    <!-- List of secondary entity items -->
+                    <div class="card mb-3">
+                        <div class="card-body p-2 p-md-3">
+                            <div class="d-flex flex-wrap justify-cotent-start align-items-center mb-2">
+                                <h6 class="fw-bold mb-0">John Smith</h6>
+                                <small class="text-warning ms-1">
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star"></i>
+                                </small>
                             </div>
-                              <div class="mb-3">
-                                <label for="rating" class="form-label">Rating</label>
-                                  <select class="form-select" id="rating" required>
-                                    <option value="5">5 Stars</option>
-                                      <option value="4">4 Stars</option>
-                                      <option value="3">3 Stars</option>
-                                      <option value="2">2 Stars</option>
-                                      <option value="1">1 Star</option>
-                                  </select>
-                              </div>
-                               <div class="mb-3">
-                                 <label for="commentText" class="form-label">Comment</label>
-                                    <textarea class="form-control" id="commentText" rows="3" required placeholder="Write your review here..."></textarea>
+                            <small class="text-muted text-left mb-0 w-100 mt-1">October 8, 2026</small>
+                            <p class="card-text small text-muted">Great apartment, very well located and spacious rooms.
+                            </p>
+                            <div class="d-flex flex-nowrap">
+                                <button class="btn btn-sm btn-outline-secondary" type="button">Edit</button>
+                                <button class="btn btn-sm btn-outline-danger ms-1" type="button">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mb-3">
+                        <div class="card-body p-2 p-md-3">
+                            <div class="d-flex flex-wrap justify-cotent-start align-items-center mb-2">
+                                <h6 class="fw-bold mb-0">Antonio Jiménez</h6>
+                                <small class="text-warning ms-1">
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star"></i>
+                                    <i class="bi bi-star"></i>
+                                    <i class="bi bi-star"></i>
+                                </small>
+                            </div>
+                            <small class="text-muted text-left mb-0 w-100 mt-1">July 15, 2026</small>
+                            <p class="card-text small text-muted">Its well connected but very old. The floor creeks as
+                                soon as you move, the walls show signs of water damage and the cabinet doors are falling
+                                appart. Such a shame given the space and location.
+                            </p>
+                            <div class="d-flex flex-nowrap">
+                                <button class="btn btn-sm btn-outline-secondary" type="button">Edit</button>
+                                <button class="btn btn-sm btn-outline-danger ms-1" type="button">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Form to create a new secondary entity item -->
+                    <div class="card mt-4 bg-light">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">Add a Review</h5>
+                            <form>
+                                <div class="mb-3">
+                                    <label for="authorName" class="form-label">Your Name</label>
+                                    <input type="text" class="form-control" id="authorName" required
+                                        placeholder="e.g. Maria Rodríguez">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="reviewDate" class="form-label">Date</label>
+                                    <input type="date" class="form-control" id="reviewDate" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="rating" class="form-label">Rating</label>
+                                    <select class="form-select" id="rating" required>
+                                        <option value="5">5 Stars</option>
+                                        <option value="4">4 Stars</option>
+                                        <option value="3">3 Stars</option>
+                                        <option value="2">2 Stars</option>
+                                        <option value="1">1 Star</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="commentText" class="form-label">Comment</label>
+                                    <textarea class="form-control" id="commentText" rows="3" required
+                                        placeholder="Write your review here..."></textarea>
                                 </div>
                                 <button type="button" class="btn btn-primary">Create</button>
-                          </form>
-                      </div>
-                  </div>
-
-              </div>
-          </div>
-     </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
     <footer class="py-5 bg-dark">
