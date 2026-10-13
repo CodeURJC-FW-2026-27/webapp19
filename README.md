@@ -44,3 +44,33 @@
 ### Search, Filtering, and Categorization
 * **Search Engine**: A text input box allowing users to search for properties whose title or location contains the specified query string.
 * **Categorization:** Properties are categorized by price ranges, location zones, or the number of rooms, accessible from the navigation menu. 
+
+## Member participation
+
+### Participation of Paula Sánchez Garduño
+
+**Description of tasks performed:**
+For this initial task, I was responsible for establishing the entire structural and visual foundation of the web application using HTML and CSS. I began by defining the semantic structure of the main page and setting up the basic navigation bar. Next, I downloaded and adapted a Bootstrap template, integrating its grid system to ensure a responsive design. Once that foundation was in place, I populated the catalog by adding details for eight of the nine required properties, thereby completing the home page. I also worked on the individual property pages, structuring the section dedicated to the secondary entity. Finally, I finished the property creation form by standardizing the header and including the category selector, thus meeting one of the key requirements.
+
+**The 5 most significant commits:**
+*[Setup semantic HTML structure and navigation for index page](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/b4e3e33dd107cfdf9caefb967acce4816412545b): I’ve prepared the HTML "skeleton" and the navigation here before applying the styles.
+*[Integrate Bootstrap template and layout into index.html](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/eae3f26d54dc9476fe79eb575a57174cf4a32601): 
+That was where I integrated the Bootstrap template into the project to start shaping the interface.
+*[Add secondary entity to property_detail.html](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/0a8c3330dd87e319943f295cad0ec7e5f9f72f5e): 
+In this commit, I defined the view for the secondary entity within the property details.
+*[Add complete details for remaining 8 properties](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/4ee713b57385a37e9dd76bb17a2d5b238429d772)
+Complete the cover page to finalize the grid with all the test elements.
+*[Add category select form field and fix navbar active link](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/30a16aa947d57ad14f0dba4b72e926aa0ed230b4)
+Where I added the dropdown menu to the form to categorize the properties.
+
+**The 5 files I have contributed to the most:**
+*[`index.html`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/index.html): 
+Where I set up the semantic HTML and the Bootstrap template, and filled in the cover page properties.
+*[`property_detail.html`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/property_detail.html)
+Where I set up the individual view and added the secondary entity block.
+*[`new_property.html`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/new_property.html)
+Where I adjusted the form by adding the category selector and unified the menu.
+*[`style.css`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/css/styles.css)
+For the additional style adjustments I had to make to the template.
+*[`README.md`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/README.md)
+Where I added the initial configuration and the link to Trello, and documented my part of the work.
