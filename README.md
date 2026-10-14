@@ -115,3 +115,17 @@ Where I added the initial configuration and the link to Trello, and documented m
 * [`README.md`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/README.md): Documented the Property attributes and categorization by number of rooms.
 * [`index.html`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/index.html): Added sample titles for the property cards on the home page.
 * [`new_property.html`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/new_property.html): Created the property form and its page layout.
+
+### Participation of Rodrigo Fernández de Córdoba García
+* In this phase of the project, I mostly focused on the entity page. In the first part, when deciding the theme and structure, I proposed the theme and filters for the page. For the rest of the project I focused on creating the secondary entity page, adapting it to the template and fixing other CSS issues. The commits made were only 2, but the focus was on having each commit deliver a finished part instead of non functional pieces
+
+**The most significant commits:**
+
+* [Primary entity detail page](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/cb9457a09e986785bbe1b1e8997e2798a8cce608): This commit includes the first version of the detail page for apartments, with all of the fields, header and footer (except reviews) and already adapted to the template.
+
+* [CSS fixes and second review](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/26671dde3c7190757707354aa0dc5421d132a8af): Added a second review and fixed CSS and issues mostly related to difference between screen sizes.
+
+**The files I have contributed to:**
+
+* [`index.html`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/index.html): Fixed CSS issues
+* [`property_detail.html](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/new_property.html): Created the page and adapted it to the template
