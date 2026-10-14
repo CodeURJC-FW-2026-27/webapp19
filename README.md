@@ -129,3 +129,25 @@ Where I added the initial configuration and the link to Trello, and documented m
 
 * [`index.html`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/index.html): Fixed CSS issues
 * [`property_detail.html](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/new_property.html): Created the page and adapted it to the template
+
+#### Participation of Enrique Aldama Moradillo
+
+**Description of tasks performed:**
+
+* I fixed style, consistency and form issues in the three pages. I created `css/custom.css` for the project's own styles, linked it in all pages and gave all property card images the same height. I replaced the inline styles of the status badges with Bootstrap utilities. In the detail page, I added the shared header and the property category, fixed the size of property 1, replaced wrong Bootstrap classes, unified the style and order of the action buttons and aligned the review form with the property form. In the new property page, I fixed the category typo, added validation limits to the price, area and description fields and increased the spacing between the header and the form.
+
+**The 5 most significant commits:**
+
+* [Add custom stylesheet with uniform card image height](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/9a1129e812716450058d29a15f44160f78b2468d): I created `css/custom.css`, linked it in the three pages and set the same height for all card images with `object-fit: cover`. I also changed the detail image from `card-img-top` to `img-fluid rounded`, because it is not inside a card.
+* [Replace inline badge styles with Bootstrap position utilities](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/2038ca0f6334f5eb774fe299cd101fd3bc23a6d5): I removed the inline styles of the 9 status badges and used the Bootstrap classes `top-0 end-0 m-2` instead.
+* [Add shared dark header to property detail page](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/2508d7116b3bc6e69d353ed64180615e2566ff41): I added the dark header used in the other pages, so all pages share the same header and footer.
+* [Show category and fix size of property on detail page](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/8861a5b8cdf3b21bdd471758e2d4d85305b86c7c): I added the category to the property details and changed the size of property 1 from 120 m² to 100 m², the value shown on its card.
+* [Fix review date classes and align review form with property form](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/494922f9743fa73d2916d43ae630777ae1a28528): I replaced `text-left` with `text-start d-block` in the review dates. In the review form, I right-aligned the *Create* button and added `name` attributes and `review`-prefixed ids to the fields.
+
+**The 5 files I have contributed to the most:**
+
+* [`property_detail.html`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/property_detail.html): I added the header and the category, fixed the size of property 1, the Bootstrap classes and the action buttons, and updated the review form.
+* [`index.html`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/index.html): I linked `custom.css` and replaced the inline badge styles with Bootstrap utilities.
+* [`new_property.html`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/new_property.html): I linked `custom.css`, fixed the category typo, added validation limits to price, area and description, and increased the spacing between the header and the form.
+* [`custom.css`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/css/custom.css): I created this file for the project's own styles (same height for all card images).
+* [`README.md`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/README.md): I documented my participation.
