@@ -66,6 +66,7 @@ These are the screenshots for the 3 parts required:
 
 
 ![New property page](screenshots/new-property.png)
+![New property page 2](screenshots/new-property2.png)
 
 ### Member participation
 
@@ -110,6 +111,8 @@ Where I added the initial configuration and the link to Trello, and documented m
 * [Populate main page with sample items](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/1fbd23cb88488cf92e206ca9fc152dcc6603bb6c): In this commit, I replaced the placeholder titles on the nine property cards with sample property names, so the home page displays example listings.
 * [Update new_property.html](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/a8c91b5725649ac52e894f128f767f40392a6e90): In this commit, I created the property creation page from scratch. I added the page navigation and heading, then built a responsive Bootstrap form with fields for the title, price, location, description, number of rooms, area, and property image. I also added Save and Cancel actions, with Cancel linking back to the home page.
 * [Unify shared terminology and page metadata](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/0ee6ea6): In this commit, I unified page titles and property terminology, removed empty metadata and template favicons, updated category links and image alt text, and added missing section comments to the property detail page.
+* [Little fixes](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/170494bb68cf8037f922808943696dfb74a6431c): Fixed duplicated property detail images and data, aligned the area with the home page, and applied cover cropping to the detail image.
+* [Format HTML files](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/a52850fec85bb1fef717c05bd980ae49915a1791): Reformatted the three HTML files in VS Code for consistent spacing, indentation, and line wrapping without changing their content.
 
 **The files I have contributed to:**
 
