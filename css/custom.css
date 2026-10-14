@@ -1,0 +1,7 @@
+/* DreamHouse custom styles, loaded after the Bootstrap theme (styles.css) */
+
+/* Same height for all property card images so the grid stays even */
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
