@@ -45,9 +45,31 @@
 * **Search Engine**: A text input box allowing users to search for properties whose title or location contains the specified query string.
 * **Categorization:** Properties are categorized by price ranges, location zones, or the number of rooms, accessible from the navigation menu. 
 
-## Member participation
+## Practice 1
 
-### Participation of Paula Sánchez Garduño
+### Screenshots
+
+These are the screenshots for the 3 parts required:
+
+#### Home page
+
+![Home page](screenshots/home.png)
+![Home page 2](screenshots/home2.png)
+
+#### Property detail page
+
+
+![Property detail page](screenshots/property-detail.png)
+![Property detail page 2](screenshots/property-detail2.png)
+
+#### New property page
+
+
+![New property page](screenshots/new-property.png)
+
+### Member participation
+
+#### Participation of Paula Sánchez Garduño
 
 **Description of tasks performed:**
 
@@ -76,7 +98,7 @@ For the additional style adjustments I had to make to the template.
 * [`README.md`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/README.md)
 Where I added the initial configuration and the link to Trello, and documented my part of the work.
 
-### Participation of Diego Rodríguez Salinas
+#### Participation of Diego Rodríguez Salinas
 
 **Description of tasks performed:**
 
