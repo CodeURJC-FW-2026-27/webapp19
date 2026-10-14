@@ -71,7 +71,7 @@
     </header>
     <!-- Property form-->
     <main>
-        <section class="py-2">
+        <section class="py-3">
             <div class="container px-4 px-lg-5">
                 <div class="row justify-content-center">
                     <div class="col-lg-8 col-xl-7">
@@ -86,7 +86,7 @@
                                     <div class="mb-3">
                                         <label for="propertyCategory" class="form-label">Category</label>
                                         <select class="form-select" id="propertyCategory" name="category" required>
-                                            <option value="" selected disabled> Select categry...</option>
+                                            <option value="" selected disabled> Select category...</option>
                                             <option value="shared"> Shared Apartments</option>
                                             <option value="house">Full Houses</option>
                                             <option value="room">Rooms</option>
@@ -95,7 +95,7 @@
                                     <div class="mb-3">
                                         <label for="propertyPrice" class="form-label">Monthly price (€)</label>
                                         <input type="number" class="form-control" id="propertyPrice" name="price"
-                                            min="0" step="0.01" placeholder="e.g. 850" required />
+                                            min="1" step="0.01" placeholder="e.g. 850" required />
                                     </div>
                                     <div class="mb-3">
                                         <label for="propertyLocation" class="form-label">Location</label>
@@ -106,7 +106,7 @@
                                         <label for="propertyDescription" class="form-label">Description</label>
                                         <textarea class="form-control" id="propertyDescription" name="description"
                                             rows="5" placeholder="Describe the property and its features"
-                                            required></textarea>
+                                            minlength="20" maxlength="1000" required></textarea>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
@@ -117,7 +117,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="propertyArea" class="form-label">Area (m²)</label>
                                             <input type="number" class="form-control" id="propertyArea" name="area"
-                                                min="0" step="0.01" placeholder="e.g. 75" required />
+                                                min="1" step="0.01" placeholder="e.g. 75" required />
                                         </div>
                                     </div>
                                     <div class="mb-4">
