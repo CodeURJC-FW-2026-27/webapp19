@@ -115,7 +115,7 @@
                                     <i class="bi bi-star"></i>
                                 </small>
                             </div>
-                            <small class="text-muted text-left mb-0 w-100 mt-1">October 8, 2026</small>
+                            <small class="text-muted text-start d-block mb-0 w-100 mt-1">October 8, 2026</small>
                             <p class="card-text small text-muted">Great apartment, very well located and spacious rooms.
                             </p>
                             <div class="d-flex flex-nowrap">
@@ -136,7 +136,7 @@
                                     <i class="bi bi-star"></i>
                                 </small>
                             </div>
-                            <small class="text-muted text-left mb-0 w-100 mt-1">July 15, 2026</small>
+                            <small class="text-muted text-start d-block mb-0 w-100 mt-1">July 15, 2026</small>
                             <p class="card-text small text-muted">Its well connected but very old. The floor creeks as
                                 soon as you move, the walls show signs of water damage and the cabinet doors are falling
                                 appart. Such a shame given the space and location.
@@ -153,17 +153,17 @@
                             <h5 class="card-title mb-3">Add a Review</h5>
                             <form>
                                 <div class="mb-3">
-                                    <label for="authorName" class="form-label">Your Name</label>
-                                    <input type="text" class="form-control" id="authorName" required
+                                    <label for="reviewAuthor" class="form-label">Your Name</label>
+                                    <input type="text" class="form-control" id="reviewAuthor" name="author" required
                                         placeholder="e.g. Maria Rodríguez">
                                 </div>
                                 <div class="mb-3">
                                     <label for="reviewDate" class="form-label">Date</label>
-                                    <input type="date" class="form-control" id="reviewDate" required>
+                                    <input type="date" class="form-control" id="reviewDate" name="date" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="rating" class="form-label">Rating</label>
-                                    <select class="form-select" id="rating" required>
+                                    <label for="reviewRating" class="form-label">Rating</label>
+                                    <select class="form-select" id="reviewRating" name="rating" required>
                                         <option value="5">5 Stars</option>
                                         <option value="4">4 Stars</option>
                                         <option value="3">3 Stars</option>
@@ -172,11 +172,13 @@
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="commentText" class="form-label">Comment</label>
-                                    <textarea class="form-control" id="commentText" rows="3" required
+                                    <label for="reviewComment" class="form-label">Comment</label>
+                                    <textarea class="form-control" id="reviewComment" name="comment" rows="3" required
                                         placeholder="Write your review here..."></textarea>
                                 </div>
-                                <button type="button" class="btn btn-primary">Create</button>
+                                <div class="d-flex flex-column flex-sm-row justify-content-end gap-2">
+                                    <button type="button" class="btn btn-primary">Create</button>
+                                </div>
                             </form>
                         </div>
                     </div>
