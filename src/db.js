@@ -15,6 +15,8 @@ export async function connectDB() {
             ]);
             console.log('Datos iniciales insertados en MongoDB');
         }
-    } catch (err)     } catch (err)     }('Error al conectar a MongoDB:', err);
+    } catch (err) {
+        console.log('Error al conectar a MongoDB:', err);
     }
+
 }
