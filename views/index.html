@@ -61,10 +61,57 @@
                 </div>
                 {{/properties}}
                 <!-- Mustache loop ends here-->
-
-
                 
             </div>
+            <!--Pagination navigation-->
+            <nav aria-label = "Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+
+                    <!--Previous page button -->
+                    {{#hasPrevPage}}
+                    <li class="page-item">
+                        <a class="page-link" href="/?page={{prevPage}}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo; Previous </span>
+                        </a>
+                    </li>
+                    {{/hasPrevPage}}
+                    {{^hasPrevPage}}
+                    <li class="page-item disabled">
+                        <span class="page-link">&laquo; Previous</span>
+                    </li>
+                    {{/hasPrevPage}}
+
+                    <!-- Page numbers loop-->
+                     {{#pages}}
+                        {{#isCurrent}}
+                        <li class="page-item active" aria-current="page">
+                            <span class="page-link">{{number}}</span>
+                        </li>
+                        {{/isCurrent}}
+                        {{^isCurrent}}
+                        <li class="page-item">
+                            <a class="page-link" href="/?page={{number}}">{{number}}</a>
+                        </li>
+                        {{/isCurrent}}
+                    {{/pages}}
+
+                    <!-- Next page button-->
+                     {{#hasNextPage}}
+                     <li class="page-item">
+                        <a class="page-link" href="/?page={{nextPage}}" aria-label="Next">
+                            <span aria-hidden="true">Next &raquo;</span>
+                        </a>
+                     </li>
+                     {{/hasNextPage}}
+                     {{^hasNextPage}}
+                     <li class="page-item disabled">
+                        <span class="page-link">Next &raquo;</span>
+                    </li>
+                    {{/hasNextPage}}
+
+                </ul>
+            </nav>
+
         </div>
     </section>
 
