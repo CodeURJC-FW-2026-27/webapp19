@@ -41,4 +41,21 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/property/:id', async (req,res) => {
+    try{
+        //find the property by its unique ID
+        const property = await Property.findById(req.params.id).lean();
+
+        if(!property){
+            return res.status(404).send('Property not found');
+        }
+
+        //Render the detail vieww passing the property data 
+        res.render('property_detail', { property });
+    }catch(err){
+        console.error("Error retrieving property details: ", err);
+        res.status(500).send('Error retrieving property details');
+    }
+})
+
 export default router;
