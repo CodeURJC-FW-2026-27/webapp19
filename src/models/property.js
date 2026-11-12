@@ -18,4 +18,5 @@ const propertySchema = new mongoose.Schema({
 const Comment = mongoose.model('Comment', commentSchema);
 const Property = mongoose.model('Property', propertySchema);
 
-export default Property;
+//Exporting models so they can be imported and used in the router
+export {Property, Comment};

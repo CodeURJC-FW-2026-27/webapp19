@@ -1,7 +1,7 @@
 {
   "name": "webapp19",
   "version": "1.0.0",
-  "description": "Aplicacion Web DreamHouse",
+  "description": "| Name | Surname | Official University Email | GitHub Account | | :--- | :--- | :--- | :--- | | Paula | Sánchez Garduño | p.sanchezg.2023@alumnos.urjc.es | paulasanchez4 | | Diego | Rodríguez Salinas| d.rodriguezs.2023@alumnos.urjc.es | diieegorodriguezz | | Rodrigo | Fernández de Córdoba García | r.fernandezgar.2023@alumnos.urjc.es | RodrigoFDCG | | Enrique | Aldama Moradillo | e.aldama.2023@alumnos.urjc.es | EnriqueAldama |",
   "main": "src/app.js",
   "type": "module",
   "scripts": {
@@ -11,7 +11,13 @@
     "type": "git",
     "url": "git+https://github.com/CodeURJC-FW-2026-27/webapp19.git"
   },
+  "keywords": [],
+  "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CodeURJC-FW-2026-27/webapp19/issues"
+  },
+  "homepage": "https://github.com/CodeURJC-FW-2026-27/webapp19#readme",
   "dependencies": {
     "express": "^5.3.0",
     "mongoose": "^9.11.4",
