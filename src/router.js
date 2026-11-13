@@ -50,12 +50,64 @@ router.get('/property/:id', async (req,res) => {
             return res.status(404).send('Property not found');
         }
 
+        // Map comments to generate a dynamic array of stars for Mustache rendering
+        if(property.comments && property.comments.length >0){
+            property.comments = property.comments.map(comment =>{
+                const stars = [];
+                for(let i=1; i<=5;i++){
+                    stars.push({
+                        filled: i<= comment.rating
+                    });
+                }
+                return {
+                    ...comment,
+                    stars
+                };
+            });
+        }
+
         //Render the detail vieww passing the property data 
         res.render('property_detail', { property });
     }catch(err){
         console.error("Error retrieving property details: ", err);
         res.status(500).send('Error retrieving property details');
     }
-})
+});
+
+//Route to recive and save a new review/comment for the forn
+router.post('/property/:id/comment', async(req, res)=> {
+    try{
+        //Extract the exact name attributes defined in the HTML form
+        const { author, date, rating, comment} = req.body;
+
+        //Basic server-side validation for required fields
+        if(!author || !date || !rating || !comment){
+            return res.status(400).send('All fields are required');
+        }
+
+        //Map the form data to the keys expected by the Mongoose model
+        const newComment = {
+            name: author, //'author' in HTML maps to 'name' in the model
+            date: date,
+            rating: Number(rating),
+            text: comment //'comment' in HTML maps to 'text' in the model
+        };
+
+        //Find the property, push the new comment into its comments array, and save
+        const property = await Property.findById(req.params.id);
+        if (!property){
+            return res.status(404).send('Property not found');
+        } 
+
+        property.comments.push(newComment);
+        await property.save();
+
+        //Redirect back to the property detail page to see the new review
+        res.redirect(`/property/${req.params.id});
+    } catch(err){
+        console.error("Error saving comment:", err);
+        res.status(500).send('Error saving comment');
+    }
+});
 
 export default router;
