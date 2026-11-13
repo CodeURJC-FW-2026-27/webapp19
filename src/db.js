@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import Property from './models/property.js';
+import { Property } from './models/property.js';
 
 export async function connectDB() {
     try {
