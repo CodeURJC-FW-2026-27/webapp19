@@ -1,7 +1,10 @@
 import express from 'express';
+import multer from 'multer';
+import path from 'node:path';
 import { Property } from './models/property.js';
 
 const router = express.Router();
+const upload = multer({ dest: 'uploads/'});
 
 //Main page route with pagination
 router.get('/', async (req, res) => {
@@ -85,6 +88,22 @@ router.get('/property/:id', async (req,res) => {
             backUrl:'/',
             backText:'Back to Home'
         });
+    }
+});
+
+//Route to download the property image stored in the uploads folder
+router.get('/property/:id/image', async(req, res)=> {
+    try{
+        const property = await Property.findById(req.params.id);
+        if(!property || !property.image){
+            return res.status(404).send('Image not found');
+        }
+
+        const imagePath = path.resolve('uploads', property.image);
+        res.download(imagePath);
+    } catch (err){
+        console.error('Error downloading property image:', err);
+        res.status(500).send('Error retrieving image');
     }
 });
 
