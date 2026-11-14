@@ -103,7 +103,7 @@ router.post('/property/:id/comment', async(req, res)=> {
         await property.save();
 
         //Redirect back to the property detail page to see the new review
-        res.redirect(`/property/${req.params.id});
+        res.redirect(`/property/${req.params.id}`);
     } catch(err){
         console.error("Error saving comment:", err);
         res.status(500).send('Error saving comment');
