@@ -3,6 +3,7 @@ import { Property } from './models/property.js';
 
 const router = express.Router();
 
+//Main page route with pagination
 router.get('/', async (req, res) => {
     try {
         const perPage = 6; //number of items per page as required
@@ -37,17 +38,26 @@ router.get('/', async (req, res) => {
          });
     } catch (err) {
         console.error("Error retrieving properties:", err);
-        res.status(500).send('Error retrieving properties');
+        res.status(500).render('error', {
+            errorMessage:'An error occurred while loading the properties.',
+            backUrl:'/',
+            backText:'Try Again'
+        });
     }
 });
 
+//Property detail page route
 router.get('/property/:id', async (req,res) => {
     try{
         //find the property by its unique ID
         const property = await Property.findById(req.params.id).lean();
 
         if(!property){
-            return res.status(404).send('Property not found');
+            return res.status(404).render('error', {
+                errorMessage: 'Property not found.',
+                backUrl:'/',
+                backText:'Back to Home'
+            })
         }
 
         // Map comments to generate a dynamic array of stars for Mustache rendering
@@ -66,15 +76,19 @@ router.get('/property/:id', async (req,res) => {
             });
         }
 
-        //Render the detail vieww passing the property data 
+        //Render the detail view passing the property data 
         res.render('property_detail', { property });
     }catch(err){
         console.error("Error retrieving property details: ", err);
-        res.status(500).send('Error retrieving property details');
+        res.status(500).render('error', {
+            errorMessage:'An error occurred while retrieving the property details.',
+            backUrl:'/',
+            backText:'Back to Home'
+        });
     }
 });
 
-//Route to recive and save a new review/comment for the forn
+//Route to receive and save a new review/comment for the form
 router.post('/property/:id/comment', async(req, res)=> {
     try{
         //Extract the exact name attributes defined in the HTML form
@@ -82,7 +96,11 @@ router.post('/property/:id/comment', async(req, res)=> {
 
         //Basic server-side validation for required fields
         if(!author || !date || !rating || !comment){
-            return res.status(400).send('All fields are required');
+            return res.status(400).render('error',{
+                errorMessage:'All review fields(author, date, rating, and comment) are required.',
+                backUrl:`/property/${req.params.id}`,
+                backText:'Back to Property'
+            });
         }
 
         //Map the form data to the keys expected by the Mongoose model
@@ -96,17 +114,30 @@ router.post('/property/:id/comment', async(req, res)=> {
         //Find the property, push the new comment into its comments array, and save
         const property = await Property.findById(req.params.id);
         if (!property){
-            return res.status(404).send('Property not found');
+            return res.status(404).render('error', {
+               errorMessage: 'Property not found.',
+               backUrl: '/',
+               backText: 'Back to Home'
+            });
         } 
 
         property.comments.push(newComment);
         await property.save();
 
         //Redirect back to the property detail page to see the new review
-        res.redirect(`/property/${req.params.id}`);
-    } catch(err){
-        console.error("Error saving comment:", err);
-        res.status(500).send('Error saving comment');
+        res.render('confirmation', {
+            title: 'Review Submitted',
+            message: 'Your review has been added successfully.',
+            backUrl: `/property/${req.params.id}`,
+            backText: 'Back to Property Details'
+        });
+    } catch (err) {
+        console.error("Error saving comment: ", err);
+        res.status(500).render('error', {
+            errorMessage: 'An unexpected error occurred while saving your review.',
+            backUrl: `/property/${req.params.id}`,
+            backText:'Back to Property'
+        });
     }
 });
 
