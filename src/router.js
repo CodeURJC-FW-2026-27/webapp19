@@ -4,72 +4,72 @@ import path from 'node:path';
 import { Property } from './models/property.js';
 
 const router = express.Router();
-const upload = multer({ dest: 'uploads/'});
+const upload = multer({ dest: 'uploads/' });
 
 //Main page route with pagination
 router.get('/', async (req, res) => {
     try {
         const perPage = 6; //number of items per page as required
-        const page= parseInt(req.query.page) || 1; //current page, default to 1
+        const page = parseInt(req.query.page) || 1; //current page, default to 1
 
         //Count total properties to calculate total pages
-        const totalProperties = await Property.countDocuments ();
+        const totalProperties = await Property.countDocuments();
         const totalPages = Math.ceil(totalProperties / perPage);
 
         //Fetch only the properties for the current page
         const properties = await Property.find()
-        .skip((page-1) * perPage)
-        .limit(perPage)
-        .lean();
+            .skip((page - 1) * perPage)
+            .limit(perPage)
+            .lean();
 
         //Generate an array of pages for the view pagination links
         const pages = [];
-        for(let i = 1; i<= totalPages; i++){
+        for (let i = 1; i <= totalPages; i++) {
             pages.push({
                 number: i,
-                isCurrent: i ===page
+                isCurrent: i === page
             });
         }
 
         //Render the index view passing pagination parameters
-        res.render('index', { 
+        res.render('index', {
             properties,
             pages,
             hasNextPage: page < totalPages,
             hasPrevPage: page > 1,
             prevPage: page - 1
-         });
+        });
     } catch (err) {
         console.error("Error retrieving properties:", err);
         res.status(500).render('error', {
-            errorMessage:'An error occurred while loading the properties.',
-            backUrl:'/',
-            backText:'Try Again'
+            errorMessage: 'An error occurred while loading the properties.',
+            backUrl: '/',
+            backText: 'Try Again'
         });
     }
 });
 
 //Property detail page route
-router.get('/property/:id', async (req,res) => {
-    try{
+router.get('/property/:id', async (req, res) => {
+    try {
         //find the property by its unique ID
         const property = await Property.findById(req.params.id).lean();
 
-        if(!property){
+        if (!property) {
             return res.status(404).render('error', {
                 errorMessage: 'Property not found.',
-                backUrl:'/',
-                backText:'Back to Home'
+                backUrl: '/',
+                backText: 'Back to Home'
             })
         }
 
         // Map comments to generate a dynamic array of stars for Mustache rendering
-        if(property.comments && property.comments.length >0){
-            property.comments = property.comments.map(comment =>{
+        if (property.comments && property.comments.length > 0) {
+            property.comments = property.comments.map(comment => {
                 const stars = [];
-                for(let i=1; i<=5;i++){
+                for (let i = 1; i <= 5; i++) {
                     stars.push({
-                        filled: i<= comment.rating
+                        filled: i <= comment.rating
                     });
                 }
                 return {
@@ -81,44 +81,45 @@ router.get('/property/:id', async (req,res) => {
 
         //Render the detail view passing the property data 
         res.render('property_detail', { property });
-    }catch(err){
+    } catch (err) {
         console.error("Error retrieving property details: ", err);
         res.status(500).render('error', {
-            errorMessage:'An error occurred while retrieving the property details.',
-            backUrl:'/',
-            backText:'Back to Home'
+            errorMessage: 'An error occurred while retrieving the property details.',
+            backUrl: '/',
+            backText: 'Back to Home'
         });
     }
 });
 
 //Route to download the property image stored in the uploads folder
-router.get('/property/:id/image', async(req, res)=> {
-    try{
+router.get('/property/:id/image', async (req, res) => {
+    try {
         const property = await Property.findById(req.params.id);
-        if(!property || !property.image){
+        if (!property || !property.image) {
             return res.status(404).send('Image not found');
         }
 
-        const imagePath = path.resolve('uploads', property.image);
+        const filename = path.basename(property.image);
+        const imagePath = path.resolve('uploads', filename);
         res.download(imagePath);
-    } catch (err){
+    } catch (err) {
         console.error('Error downloading property image:', err);
         res.status(500).send('Error retrieving image');
     }
 });
 
 //Route to receive and save a new review/comment for the form
-router.post('/property/:id/comment', async(req, res)=> {
-    try{
+router.post('/property/:id/comment', async (req, res) => {
+    try {
         //Extract the exact name attributes defined in the HTML form
-        const { author, date, rating, comment} = req.body;
+        const { author, date, rating, comment } = req.body;
 
         //Basic server-side validation for required fields
-        if(!author || !date || !rating || !comment){
-            return res.status(400).render('error',{
-                errorMessage:'All review fields(author, date, rating, and comment) are required.',
-                backUrl:`/property/${req.params.id}`,
-                backText:'Back to Property'
+        if (!author || !date || !rating || !comment) {
+            return res.status(400).render('error', {
+                errorMessage: 'All review fields(author, date, rating, and comment) are required.',
+                backUrl: `/property/${req.params.id}`,
+                backText: 'Back to Property'
             });
         }
 
@@ -132,13 +133,13 @@ router.post('/property/:id/comment', async(req, res)=> {
 
         //Find the property, push the new comment into its comments array, and save
         const property = await Property.findById(req.params.id);
-        if (!property){
+        if (!property) {
             return res.status(404).render('error', {
-               errorMessage: 'Property not found.',
-               backUrl: '/',
-               backText: 'Back to Home'
+                errorMessage: 'Property not found.',
+                backUrl: '/',
+                backText: 'Back to Home'
             });
-        } 
+        }
 
         property.comments.push(newComment);
         await property.save();
@@ -155,7 +156,7 @@ router.post('/property/:id/comment', async(req, res)=> {
         res.status(500).render('error', {
             errorMessage: 'An unexpected error occurred while saving your review.',
             backUrl: `/property/${req.params.id}`,
-            backText:'Back to Property'
+            backText: 'Back to Property'
         });
     }
 });

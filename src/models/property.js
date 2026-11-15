@@ -13,10 +13,13 @@ const propertySchema = new mongoose.Schema({
     price: { type: Number, required: true },
     status: { type: String, enum: ['Available', 'Rented'], default: 'Available' },
     image: { type: String, required: true },
-    comments: [commentSchema]
+    comments: [commentSchema],
+    bathrooms: { type: Number, required: true },
+    type: { type: String, enum: ['Shared Apartment', 'Full House', 'Room'], required: true },
+    description: { type: String, required: true }
 });
 const Comment = mongoose.model('Comment', commentSchema);
 const Property = mongoose.model('Property', propertySchema);
 
 //Exporting models so they can be imported and used in the router
-export {Property, Comment};
+export { Property, Comment };
