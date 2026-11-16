@@ -162,7 +162,14 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/new_property', (req, res) => {
-    res.render('new_property');
+    res.render('new_property', {
+        isEdit: false,
+        formAction: '/new_property',
+        pageTitle: 'Add Property',
+        submitText: 'Save',
+        cancelUrl: '/',
+        isAvailable: true
+    });
 });
 
 router.post('/new_property', upload.single('image'), async (req, res) => {
@@ -173,17 +180,13 @@ router.post('/new_property', upload.single('image'), async (req, res) => {
     });
     try {
         const { title, category, status, price, location, description, bedrooms, area } = req.body;
-
-        //Validation from the backend
-        if (!title || !category || !price || !location || !description || !bedrooms || !area) {
+        const validationError = await validatePropertyData(req.body, req.file);
+        if (validationError) {
             if (req.file) fs.unlink(req.file.path, () => { });
-            return formError('All property fields are required.');
-        }
-        if (!req.file) {
-            return formError('A valid image file is required.');
+            return formError(validationError);
         }
 
-        const property = await Property.create({ title, category, status, price: Number(price), location, description, bedrooms: Number(bedrooms), area: Number(area), image: req.file.filename });
+        const property = await Property.create({ title: title.trim(), category, status, price: Number(price), location: location.trim(), description: description.trim(), bedrooms: Number(bedrooms), area: Number(area), image: req.file.filename });
 
         res.render('confirmation', {
             title: 'Property Created',
@@ -193,12 +196,11 @@ router.post('/new_property', upload.single('image'), async (req, res) => {
         });
     } catch (err) {
         console.error('Error creating property: ', err);
-        //The property was not saved, so delete its uploaded image
         if (req.file) fs.unlink(req.file.path, () => { });
         if (err.name === 'ValidationError') {
             return formError('Some property fields are not valid. Please review the form.');
         }
-        formError('An unexpected error occurred while saving the property.', 500);
+        return formError('An unexpected error occurred while saving the property.', 500);
     }
 });
 
