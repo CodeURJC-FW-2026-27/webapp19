@@ -162,7 +162,6 @@ router.get('/', async (req, res) => {
     }
 });
 
-<<<<<<< HEAD
 router.get('/new_property', (req, res) => {
     res.render('new_property');
 });
