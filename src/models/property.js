@@ -14,8 +14,7 @@ const propertySchema = new mongoose.Schema({
     status: { type: String, enum: ['Available', 'Rented'], default: 'Available' },
     image: { type: String, required: true },
     comments: [commentSchema],
-    bathrooms: { type: Number, required: true },
-    type: { type: String, enum: ['Shared Apartment', 'Full House', 'Room'], required: true },
+    category: { type: String, enum: ['Shared Apartment', 'Full House', 'Room'], required: true },
     description: { type: String, required: true }
 });
 const Comment = mongoose.model('Comment', commentSchema);

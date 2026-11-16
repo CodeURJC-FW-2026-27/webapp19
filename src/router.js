@@ -1,6 +1,7 @@
 import express from 'express';
 import multer from 'multer';
 import path from 'node:path';
+import fs from 'node:fs';
 import { Property } from './models/property.js';
 
 const router = express.Router();
@@ -37,7 +38,8 @@ router.get('/', async (req, res) => {
             pages,
             hasNextPage: page < totalPages,
             hasPrevPage: page > 1,
-            prevPage: page - 1
+            prevPage: page - 1,
+            nextPage: page + 1
         });
     } catch (err) {
         console.error("Error retrieving properties:", err);
@@ -46,6 +48,47 @@ router.get('/', async (req, res) => {
             backUrl: '/',
             backText: 'Try Again'
         });
+    }
+});
+
+router.get('/new_property', (req, res) => {
+    res.render('new_property');
+});
+
+router.post('/new_property', upload.single('image'), async (req, res) => {
+    const formError = (errorMessage, status = 400) => res.status(status).render('error', {
+        errorMessage,
+        backUrl: '/new_property',
+        backText: 'Back to the creation form'
+    });
+    try {
+        const { title, category, status, price, location, description, bedrooms, area } = req.body;
+
+        //Validation from the backend
+        if (!title || !category || !price || !location || !description || !bedrooms || !area) {
+            if (req.file) fs.unlink(req.file.path, () => { });
+            return formError('All property fields are required.');
+        }
+        if (!req.file) {
+            return formError('A valid image file is required.');
+        }
+
+        const property = await Property.create({ title, category, status, price: Number(price), location, description, bedrooms: Number(bedrooms), area: Number(area), image: req.file.filename });
+
+        res.render('confirmation', {
+            title: 'Property Created',
+            message: 'The property has been added successfully.',
+            backUrl: `/property/${property._id}`,
+            backText: 'View Property'
+        });
+    } catch (err) {
+        console.error('Error creating property: ', err);
+        //The property was not saved, so delete its uploaded image
+        if (req.file) fs.unlink(req.file.path, () => { });
+        if (err.name === 'ValidationError') {
+            return formError('Some property fields are not valid. Please review the form.');
+        }
+        formError('An unexpected error occurred while saving the property.', 500);
     }
 });
 
