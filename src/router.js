@@ -1,7 +1,7 @@
 import express from 'express';
 import multer from 'multer';
 import path from 'node:path';
-import fs from 'node:fs';
+import fs from 'node:fs/promises';
 import { Property } from './models/property.js';
 
 const router = express.Router();
@@ -182,7 +182,7 @@ router.post('/new_property', upload.single('image'), async (req, res) => {
         const { title, category, status, price, location, description, bedrooms, area } = req.body;
         const validationError = await validatePropertyData(req.body, req.file);
         if (validationError) {
-            if (req.file) fs.unlink(req.file.path, () => { });
+            if (req.file) await fs.rm(req.file.path, { force: true });
             return formError(validationError);
         }
 
@@ -196,7 +196,13 @@ router.post('/new_property', upload.single('image'), async (req, res) => {
         });
     } catch (err) {
         console.error('Error creating property: ', err);
-        if (req.file) fs.unlink(req.file.path, () => { });
+        if (req.file) {
+            try {
+                await fs.rm(req.file.path, { force: true });
+            } catch (cleanupError) {
+                console.error('Error removing uploaded image after failed creation:', cleanupError);
+            }
+        }
         if (err.name === 'ValidationError') {
             return formError('Some property fields are not valid. Please review the form.');
         }
@@ -265,9 +271,9 @@ router.get('/property/:id/edit', async (req, res) => {
             // Helper booleans so Mustache marks the matching <option> as 'selected'
             isAvailable: property.status === 'Available',
             isRented: property.status === 'Rented',
-            isSharedApartment: property.type === 'Shared Apartment',
-            isFullHouse: property.type === 'Full House',
-            isRoom: property.type === 'Room'
+            isSharedApartment: property.category === 'Shared Apartment',
+            isFullHouse: property.category === 'Full House',
+            isRoom: property.category === 'Room'
         });
     } catch (err) {
         console.error('Error loading edit property form:', err);
@@ -302,11 +308,10 @@ router.post('/property/:id/edit', upload.single('image'), async (req, res) => {
             });
         }
 
-        // If a new image was uploaded, delete the old one from uploads/ and store the new filename
-        // If NO new image was uploaded, keep property.image unchanged
+        let oldImagePath;
         if (req.file) {
             if (property.image) {
-                await fs.rm(path.resolve('uploads', path.basename(property.image)), { force: true });
+                oldImagePath = path.resolve('uploads', path.basename(property.image));
             }
             property.image = req.file.filename;
         }
@@ -315,14 +320,21 @@ router.post('/property/:id/edit', upload.single('image'), async (req, res) => {
         property.title = req.body.title.trim();
         property.location = req.body.location.trim();
         property.bedrooms = Number(req.body.bedrooms);
-        property.bathrooms = Number(req.body.bathrooms);
         property.area = Number(req.body.area);
         property.price = Number(req.body.price);
         property.status = req.body.status;
-        property.type = req.body.type;
+        property.category = req.body.category;
         property.description = req.body.description.trim();
 
         await property.save();
+
+        if (oldImagePath) {
+            try {
+                await fs.rm(oldImagePath, { force: true });
+            } catch (cleanupError) {
+                console.error('Property updated, but the previous image could not be removed:', cleanupError);
+            }
+        }
 
         res.render('confirmation', {
             title: 'Property Updated',
