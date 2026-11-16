@@ -28,29 +28,32 @@
                 <!--project navigation links-->
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/">Home</a>
+                        <a class="nav-link {{#isAllTypes}}active{{/isAllTypes}}" aria-current="page" href="/">Home</a>                    
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/new_property">Add Property</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
+                        <a class="nav-link dropdown-toggle {{^isAllTypes}}active{{/isAllTypes}}" id="navbarDropdown" href="#" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="/">All Properties</a></li>
+                            <li><a class="dropdown-item {{#isAllTypes}}active{{/isAllTypes}}" href="/">All Properties</a></li>                            
                             <li>
                                 <hr class="dropdown-divider" />
                             </li>
-                            <li><a class="dropdown-item" href="/">Shared Apartments</a></li>
-                            <li><a class="dropdown-item" href="/">Full Houses</a></li>
-                            <li><a class="dropdown-item" href="/">Rooms</a></li>
+                            <li><a class="dropdown-item {{#isSharedApartment}}active{{/isSharedApartment}}" href="/?type=Shared%20Apartment">Shared Apartments</a></li>
+                            <li><a class="dropdown-item {{#isFullHouse}}active{{/isFullHouse}}" href="/?type=Full%20House">Full Houses</a></li>
+                            <li><a class="dropdown-item {{#isRoom}}active{{/isRoom}}" href="/?type=Room">Rooms</a></li>
                         </ul>
                     </li>
                 </ul>
                 <!-- Search by title or location -->
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search location or title..."
-                        aria-label="Search">
+                <form class="d-flex" role="search" action="/" method="GET">
+                    {{#selectedType}}
+                    <input type="hidden" name="type" value="{{selectedType}}">
+                    {{/selectedType}}
+                    <input class="form-control me-2" type="search" name="search" placeholder="Search location or title..."
+                        aria-label="Search" value="{{search}}">
                     <button class="btn btn-outline-dark" type="submit">Search</button>
                 </form>
             </div>
