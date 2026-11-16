@@ -105,8 +105,7 @@ router.get('/', async (req, res) => {
         const perPage = 6; // Maximum 6 properties per page
         const page = Math.max(1, parseInt(req.query.page) || 1);
         const search = req.query.search ? req.query.search.trim() : '';
-        const type = req.query.type ? req.query.type.trim() : '';
-
+        const category = (req.query.type || req.query.category || '').trim();       
         // Build the MongoDB filter if the user searched by text or selected a category
         const filter = {};
         if (search) {
@@ -115,8 +114,8 @@ router.get('/', async (req, res) => {
                 { location: { $regex: search, $options: 'i' } }
             ];
         }
-        if (type) {
-            filter.type = type;
+        if (category) {
+            filter.category = category;
         }
 
         const totalProperties = await Property.countDocuments(filter);
@@ -127,9 +126,8 @@ router.get('/', async (req, res) => {
             .limit(perPage)
             .lean();
 
-        // Keep search/category query parameters when navigating across pages
-        const querySuffix = `${search ? `&search=${encodeURIComponent(search)}` : ''}${type ? `&type=${encodeURIComponent(type)}` : ''}`;
-
+        // Use 'category' instead of undefined 'type' variable when building pagination query params
+        const querySuffix = `${search ? `&search=${encodeURIComponent(search)}` : ''}${category ? `&type=${encodeURIComponent(category)}` : ''}`;
         const pages = [];
         for (let i = 1; i <= totalPages; i++) {
             pages.push({
@@ -138,19 +136,22 @@ router.get('/', async (req, res) => {
                 url: `/?page=${i}${querySuffix}`
             });
         }
-
+        // Pass category helper booleans for navbar active states and fix prevPageUrl syntax
         res.render('index', {
             properties,
             pages,
             search,
-            selectedType: type,
+            selectedType: category,
+            isAllTypes: !category,
+            isSharedApartment: category === 'Shared Apartment',
+            isFullHouse: category === 'Full House',
+            isRoom: category === 'Room',
             hasNextPage: page < totalPages,
             nextPageUrl: `/?page=${page + 1}${querySuffix}`,
             hasPrevPage: page > 1,
             prevPage: page - 1,
             nextPage: page + 1,
-            prevPageUrl: `/?page=${page - 1}${querySuffix}`
-        });
+            prevPageUrl: `/?page=${page - 1}${querySuffix}`        });
     } catch (err) {
         console.error('Error retrieving properties:', err);
         res.status(500).render('error', {
