@@ -13,16 +13,17 @@ const upload = multer({ dest: 'uploads/' });
 // ============================================================================
 
 async function validatePropertyData(body, file, existingProperty = null) {
-    const { title, location, bedrooms, bathrooms, area, price, status, type, description } = body;
+    const { title, location, bedrooms, area, price, status, category, description } = body;
 
-    // 1. Check that no required field is missing
-    if (!title || !location || !bedrooms || !bathrooms || !area || !price || !status || !type || !description) {
+    // 1. Check that every required field contains a value
+    const requiredFields = [title, location, bedrooms, area, price, status, category, description];
+    if (requiredFields.some(value => typeof value !== 'string' || value.trim() === '')) {
         return 'All property fields are required.';
     }
 
     // 2. Check that the title starts with an uppercase letter
     const trimmedTitle = title.trim();
-    if (!/^[A-ZÁÉÍÓÚÑ]/.test(trimmedTitle)) {
+    if (!/^[A-ZÁÉÍÓÚÜÑ]/.test(trimmedTitle)) {
         return 'The property title must start with an uppercase letter.';
     }
 
@@ -39,31 +40,29 @@ async function validatePropertyData(body, file, existingProperty = null) {
 
     // 4. Check that numeric fields are within valid ranges
     const numBedrooms = Number(bedrooms);
-    const numBathrooms = Number(bathrooms);
     const numArea = Number(area);
     const numPrice = Number(price);
 
     if (
-        Number.isNaN(numBedrooms) || numBedrooms < 1 || numBedrooms > 20 ||
-        Number.isNaN(numBathrooms) || numBathrooms < 1 || numBathrooms > 20 ||
-        Number.isNaN(numArea) || numArea < 10 || numArea > 5000 ||
-        Number.isNaN(numPrice) || numPrice < 50 || numPrice > 50000
+        !Number.isInteger(numBedrooms) || numBedrooms < 0 || numBedrooms > 20 ||
+        !Number.isFinite(numArea) || numArea < 1 || numArea > 5000 ||
+        !Number.isFinite(numPrice) || numPrice < 1 || numPrice > 50000
     ) {
-        return 'Numeric fields (bedrooms, bathrooms, area, price) must be within valid ranges.';
+        return 'Bedrooms, area, or price are outside their allowed ranges.';
     }
 
     // 5. Check that status and category are allowed values
     if (!['Available', 'Rented'].includes(status)) {
         return 'Invalid property status.';
     }
-    if (!['Shared Apartment', 'Full House', 'Room'].includes(type)) {
+    if (!['Shared Apartment', 'Full House', 'Room'].includes(category)) {
         return 'Invalid property category.';
     }
 
     // 6. Check minimum and maximum length for the description
     const trimmedDesc = description.trim();
-    if (trimmedDesc.length < 10 || trimmedDesc.length > 1000) {
-        return 'The description must be between 10 and 1000 characters.';
+    if (trimmedDesc.length < 20 || trimmedDesc.length > 1000) {
+        return 'The description must be between 20 and 1000 characters.';
     }
 
     // 7. An image is required when creating (!existingProperty), but optional when editing
@@ -162,7 +161,6 @@ router.get('/', async (req, res) => {
     }
 });
 
-<<<<<<< HEAD
 router.get('/new_property', (req, res) => {
     res.render('new_property');
 });
