@@ -158,19 +158,50 @@ Where I added the initial configuration and the link to Trello, and documented m
 * [`README.md`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/README.md): I documented my participation.
 
 ## PRACTICE 2
-### How to run the application
 
-1. Start MongoDB (it must be running at `127.0.0.1:27017`).
-2. Install the dependencies and start the server:
+### Execution Instructions
 
+#### Requirements
+- **Node.js** (v18 or higher) and **npm**
+- **MongoDB** (v6 or higher) running locally on `127.0.0.1:27017`
+
+### Download, Build and Run
+1. Clone the repository and enter the project directory:
+```bash
+git clone [https://github.com/CodeURJC-FW-2026-27/webapp19.git](https://github.com/CodeURJC-FW-2026-27/webapp19.git)
+cd webapp19
 ```
+2. Start MongoDB (it must be running at `127.0.0.1:27017`).
+3. Install the dependencies and start the server:
+
+```bash
 npm install
 npm start
 ```
 
-3. Open http://localhost:3000 in the browser.
+4. Open http://localhost:3000 in the browser.
 
 The first time the application starts, it inserts 9 sample properties with their reviews into the `dreamhouse` database and copies the images from `data/` to `uploads/`.
+
+### File Descriptions
+
+- **[`src/app.js`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/src/app.js)**: Entry point of the Express server. Configures Mustache as the template engine, serves static files (`public/` and `/uploads`), registers the router, and starts listening on port 3000 after connecting to MongoDB.
+- **[`src/db.js`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/src/db.js)**: Connects to the MongoDB `dreamhouse` database, creates the `uploads/` folder if needed, copies the initial sample images from `data/` to `uploads/` on startup, and seeds 9 sample properties and reviews when the collection is empty.
+- **[`src/router.js`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/src/router.js)**: Defines all application routes, server-side pagination (6 properties per page), text search and category filtering, Multer image upload and cleanup logic, server-side validations, and creation, editing, and deletion operations for both properties and reviews.
+- **[`views/header.html`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/views/header.html)**: Reusable Mustache partial containing the navigation bar, category filter menu, and search bar.
+- **[`views/footer.html`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/views/footer.html)**: Reusable Mustache partial containing the page footer.
+- **[`views/index.html`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/views/index.html)**: Dynamic Mustache template for the home catalog displaying property cards and server-side pagination controls.
+- **[`views/property_detail.html`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/views/property_detail.html)**: Dynamic Mustache template displaying all details of a property, edit/delete action buttons, existing reviews with dynamic star ratings, and the form to add a new review.
+- **[`views/new_property.html`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/views/new_property.html)**: Reusable Mustache form template used both to create a new property and to edit an existing one.
+- **[`views/edit_review.html`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/views/edit_review.html)**: Mustache template containing a prefilled form to edit an existing review.
+- **[`views/confirmation.html`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/views/confirmation.html)**: Reusable confirmation page displayed after creating, editing, or deleting a property or review.
+- **[`views/error.html`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/views/error.html)**: Reusable error page displayed when server-side validation or database errors occur.
+- **[`public/css/custom.css`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/public/css/custom.css)**: Custom CSS rules for uniform property card image heights and layout refinements.
+- **[`public/css/styles.css`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/public/css/styles.css)**: Base Bootstrap template styles adapted for the web application.
+- **[`public/js/scripts.js`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/public/js/scripts.js)**: Client-side JavaScript scripts from the Bootstrap template.
+- **[`data/`](https://github.com/CodeURJC-FW-2026-27/webapp19/tree/main/data)**: Directory containing the initial sample property images (`property1.jpg` to `property9.jpg`) copied to `uploads/` on startup.
+- **`uploads/`**: Runtime directory where uploaded and active property images are stored and served from `/uploads` (excluded from Git).
+- **[`.gitignore`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/.gitignore)**: Specifies files and directories excluded from version control (`node_modules/`, `uploads/`, `.DS_Store`).
 
 ### Demo steps
 
@@ -231,11 +262,11 @@ The first time the application starts, it inserts 9 sample properties with their
 
 **The 5 most significant commits:**
 
-* [Fix MongoDB connection and remove mongoose](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/COMMIT_HASH): The application waits for `connectDB()` before listening, `Property` is assigned correctly and mongoose is removed from `package.json` and the lock file.
-* [Move images to data/ and serve from uploads](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/COMMIT_HASH): The sample images are in `data/` and are copied to `uploads/` on startup with a loop. The views load the images from `/uploads`.
-* [Fix header and footer partials, add head to views](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/COMMIT_HASH): `header.html` only has the navbar and the banner, `footer.html` has the footer and the scripts, and each view has its own `<head>`.
-* [Remove duplicated code and unify property and review names](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/COMMIT_HASH): Rewrote `router.js` with shared functions for errors, confirmations and validations.
-* [Add varied demo data and demo steps to README](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/COMMIT_HASH): Each property has different sample reviews and the README explains how to run and demo the application.
+* [Fix MongoDB connection and remove mongoose](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/e9624ffd1802ea7c0acb948cec7a7e0dac6a6324): The application waits for `connectDB()` before listening, `Property` is assigned correctly and mongoose is removed from `package.json` and the lock file.
+* [Move images to data/ and serve from uploads](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/9c20fdb773022a6c0dd5d0ff4e700cdf2f247a15): The sample images are in `data/` and are copied to `uploads/` on startup with a loop. The views load the images from `/uploads`.
+* [Fix header and footer partials, add head to views](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/55893334b7a22c0c00fd5c7dbe24c02505146932): `header.html` only has the navbar and the banner, `footer.html` has the footer and the scripts, and each view has its own `<head>`.
+* [Remove duplicated code and unify property and review names](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/3a88eba2e6337bb31af09a19e2e0eef08873cd29): Rewrote `router.js` with shared functions for errors, confirmations and validations.
+* [Add varied demo data and demo steps to README](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/ee1e0fe9a227ff73bb0c6449d94d6976054ab490): Each property has different sample reviews and the README explains how to run and demo the application.
 
 **The 5 files I have contributed to the most:**
 
