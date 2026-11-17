@@ -28,7 +28,7 @@
                     {{/image}}
                 </div>
                 <div class="col-md-6">
-                    <div class="badge bg-success text-white mb-2">Status: {{status}}</div>
+                    <div class="badge {{#isRented}}bg-danger{{/isRented}}{{^isRented}}bg-success{{/isRented}} text-white mb-2">Status: {{status}}</div>
 
                     <h1 class="display-5 fw-bolder">{{title}}</h1>
                     <div class="fs-5 mb-3">
@@ -36,7 +36,8 @@
                     </div>
                     <p class="small mb-2"><strong>Category:</strong> {{category}}</p>
                     <p class="small mb-2"><strong>Location:</strong> {{location}}</p>
-                    <p class="small mb-2"><strong>Bedrooms:</strong> {{bedrooms}} &bull; <strong>Area:</strong> {{area}} m²</p>
+                    <p class="small mb-2"><strong>Bedrooms:</strong> {{bedrooms}} &bull; <strong>Area:</strong> {{area}}
+                        m²</p>
                     <p class="lead mb-4">{{description}}</p>
 
                     <!-- Main entity actions -->
@@ -66,8 +67,8 @@
                                 <h6 class="fw-bold mb-0">{{author}}</h6>
                                 <small class="text-warning ms-1">
                                     {{#stars}}
-                                        {{#filled}}<i class="bi bi-star-fill"></i>{{/filled}}
-                                        {{^filled}}<i class="bi bi-star"></i>{{/filled}}
+                                    {{#filled}}<i class="bi bi-star-fill"></i>{{/filled}}
+                                    {{^filled}}<i class="bi bi-star"></i>{{/filled}}
                                     {{/stars}}
                                 </small>
                             </div>
@@ -87,7 +88,7 @@
                     {{^property.reviews}}
                     <p class="text-muted">No reviews yet. Be the first to leave one!</p>
                     {{/property.reviews}}
-                    
+
                     <!-- Form to create a new secondary entity item -->
                     <div class="card mt-4 bg-light">
                         <div class="card-body">
@@ -95,8 +96,8 @@
                             <form action="/property/{{property._id}}/review" method="POST">
                                 <div class="mb-3">
                                     <label for="reviewAuthor" class="form-label">Your Name</label>
-                                    <input type="text" class="form-control" id="reviewAuthor" name="author" minlength="2" maxlength="50" required
-                                        placeholder="e.g. Maria Rodríguez">
+                                    <input type="text" class="form-control" id="reviewAuthor" name="author"
+                                        minlength="2" maxlength="50" required placeholder="e.g. Maria Rodríguez">
                                 </div>
                                 <div class="mb-3">
                                     <label for="reviewDate" class="form-label">Date</label>
@@ -114,7 +115,8 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="reviewComment" class="form-label">Comment</label>
-                                    <textarea class="form-control" id="reviewComment" name="comment" rows="3" minlength="5" maxlength="500" required
+                                    <textarea class="form-control" id="reviewComment" name="comment" rows="3"
+                                        minlength="5" maxlength="500" required
                                         placeholder="Write your review here..."></textarea>
                                 </div>
                                 <div class="d-flex flex-column flex-sm-row justify-content-end gap-2">

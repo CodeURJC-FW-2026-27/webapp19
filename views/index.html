@@ -33,7 +33,7 @@
                 <div class="col mb-5">
                     <div class="card h-100">
                         <!--Status badge-->
-                        <div class="badge bg-success text-white position-absolute top-0 end-0 m-2">
+                        <div class="badge {{#isRented}}bg-danger{{/isRented}}{{^isRented}}bg-success{{/isRented}} text-white position-absolute top-0 end-0 m-2">
                             {{status}}</div>
 
                         <!-- Property image-->

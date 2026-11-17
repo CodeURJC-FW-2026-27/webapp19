@@ -159,6 +159,7 @@ router.get('/', async (req, res) => {
             .skip((page - 1) * perPage)
             .limit(perPage)
             .toArray();
+        properties.forEach(p => p.isRented = p.status === 'Rented');
 
         // Page links keep the search and the category
         let query = '';
@@ -241,6 +242,8 @@ router.get('/property/:id', async (req, res) => {
                 review.stars.push({ filled: i <= review.rating });
             }
         }
+
+        property.isRented = property.status === 'Rented';
 
         res.render('property_detail', { property });
     } catch (err) {
