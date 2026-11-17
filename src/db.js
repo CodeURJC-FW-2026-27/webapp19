@@ -1,8 +1,10 @@
-import mongoose from 'mongoose';
+import { MongoClient, ObjectId } from 'mongodb';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { Property } from './models/property.js';
+
+const client = new MongoClient('mongodb://127.0.0.1:27017');
+export let Property;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,16 +28,18 @@ function ensureSampleImages() {
         }
     }
 }
+
 export async function connectDB() {
     try {
-        await mongoose.connect('mongodb://127.0.0.1:27017/dreamhouse');
+        await client.connect();
+        properties = client.db('dreamhouse').collection('properties');
         console.log('Connected to local MongoDB');
 
         ensureSampleImages();
 
-        const count = await Property.countDocuments();
+        const count = await properties.countDocuments();
         if (count === 0) {
-            await Property.insertMany([
+            await properties.insertMany([
                 {
                     title: 'C. Río Duero 13, 6ºB',
                     location: 'Móstoles Sur, Madrid',
@@ -46,7 +50,8 @@ export async function connectDB() {
                     category: 'Full House',
                     image: 'property1.jpg',
                     description: 'Bright three-bedroom apartment in Móstoles Sur with terrace, elevator, and easy access to public transport.',
-                    comments: [{ name: 'John Smith', rating: 5, text: 'Great apartment, very well located and spacious rooms.', date: '2026-10-08' }, { name: 'Antonio Jiménez', rating: 2, text: 'Its well connected but very old. The floor creeks, the walls show signs of water damage and the cabinet doors are broken', date: '2026-07-15' }]
+                    comments: [{ _id: new ObjectId(), name: 'John Smith', rating: 5, text: 'Great apartment, very well located and spacious rooms.', date: '2026-10-08' },
+                    { _id: new ObjectId(), name: 'Antonio Jiménez', rating: 2, text: 'Its well connected but very old. The floor creeks, the walls show signs of water damage and the cabinet doors are broken', date: '2026-07-15' }]
                 },
                 {
                     title: 'Av. de la Constitución, 45',
@@ -58,7 +63,8 @@ export async function connectDB() {
                     category: 'Shared Apartment',
                     image: 'property2.jpg',
                     description: 'Modern two-bedroom shared apartment in central Madrid, ideal for students or young professionals.',
-                    comments: [{ name: 'John Smith', rating: 5, text: 'Great apartment, very well located and spacious rooms.', date: '2026-10-08' }, { name: 'Antonio Jiménez', rating: 2, text: 'Its well connected but very old. The floor creeks, the walls show signs of water damage and the cabinet doors are broken', date: '2026-07-15' }]
+                    comments: [{ _id: new ObjectId(), name: 'John Smith', rating: 5, text: 'Great apartment, very well located and spacious rooms.', date: '2026-10-08' },
+                    { _id: new ObjectId(), name: 'Antonio Jiménez', rating: 2, text: 'Its well connected but very old. The floor creeks, the walls show signs of water damage and the cabinet doors are broken', date: '2026-07-15' }]
                 },
                 {
                     title: 'C. Alcalá 120, 2ºC',
@@ -70,7 +76,8 @@ export async function connectDB() {
                     category: 'Full House',
                     image: 'property3.jpg',
                     description: 'Elegant four-bedroom residence in the Salamanca district with high ceilings and renovated bathrooms.',
-                    comments: [{ name: 'John Smith', rating: 5, text: 'Great apartment, very well located and spacious rooms.', date: '2026-10-08' }, { name: 'Antonio Jiménez', rating: 2, text: 'Its well connected but very old. The floor creeks, the walls show signs of water damage and the cabinet doors are broken', date: '2026-07-15' }]
+                    comments: [{ _id: new ObjectId(), name: 'John Smith', rating: 5, text: 'Great apartment, very well located and spacious rooms.', date: '2026-10-08' },
+                    { _id: new ObjectId(), name: 'Antonio Jiménez', rating: 2, text: 'Its well connected but very old. The floor creeks, the walls show signs of water damage and the cabinet doors are broken', date: '2026-07-15' }]
                 },
                 {
                     title: 'Paseo de la Castellana 85',
@@ -82,7 +89,8 @@ export async function connectDB() {
                     category: 'Room',
                     image: 'property4.jpg',
                     description: 'Cozy private room in Chamberí with study desk, built-in wardrobe, and shared modern kitchen.',
-                    comments: [{ name: 'John Smith', rating: 5, text: 'Great apartment, very well located and spacious rooms.', date: '2026-10-08' }, { name: 'Antonio Jiménez', rating: 2, text: 'Its well connected but very old. The floor creeks, the walls show signs of water damage and the cabinet doors are broken', date: '2026-07-15' }]
+                    comments: [{ _id: new ObjectId(), name: 'John Smith', rating: 5, text: 'Great apartment, very well located and spacious rooms.', date: '2026-10-08' },
+                    { _id: new ObjectId(), name: 'Antonio Jiménez', rating: 2, text: 'Its well connected but very old. The floor creeks, the walls show signs of water damage and the cabinet doors are broken', date: '2026-07-15' }]
                 },
                 {
                     title: 'C. Pintor Velázquez 12',
@@ -94,7 +102,8 @@ export async function connectDB() {
                     category: 'Full House',
                     image: 'property5.jpg',
                     description: 'Family-friendly three-bedroom flat near parks, supermarkets, and Rey Juan Carlos University.',
-                    comments: [{ name: 'John Smith', rating: 5, text: 'Great apartment, very well located and spacious rooms.', date: '2026-10-08' }, { name: 'Antonio Jiménez', rating: 2, text: 'Its well connected but very old. The floor creeks, the walls show signs of water damage and the cabinet doors are broken', date: '2026-07-15' }]
+                    comments: [{ _id: new ObjectId(), name: 'John Smith', rating: 5, text: 'Great apartment, very well located and spacious rooms.', date: '2026-10-08' },
+                    { _id: new ObjectId(), name: 'Antonio Jiménez', rating: 2, text: 'Its well connected but very old. The floor creeks, the walls show signs of water damage and the cabinet doors are broken', date: '2026-07-15' }]
                 },
                 {
                     title: 'Av. de España 5',
@@ -106,7 +115,8 @@ export async function connectDB() {
                     category: 'Shared Apartment',
                     image: 'property6.jpg',
                     description: 'Renovated two-bedroom shared flat in Fuenlabrada with air conditioning and balcony.',
-                    comments: [{ name: 'John Smith', rating: 5, text: 'Great apartment, very well located and spacious rooms.', date: '2026-10-08' }, { name: 'Antonio Jiménez', rating: 2, text: 'Its well connected but very old. The floor creeks, the walls show signs of water damage and the cabinet doors are broken', date: '2026-07-15' }]
+                    comments: [{ _id: new ObjectId(), name: 'John Smith', rating: 5, text: 'Great apartment, very well located and spacious rooms.', date: '2026-10-08' },
+                    { _id: new ObjectId(), name: 'Antonio Jiménez', rating: 2, text: 'Its well connected but very old. The floor creeks, the walls show signs of water damage and the cabinet doors are broken', date: '2026-07-15' }]
                 },
                 {
                     title: 'C. Mayor 10, 3ºA',
@@ -118,7 +128,8 @@ export async function connectDB() {
                     category: 'Full House',
                     image: 'property7.jpg',
                     description: 'Spacious third-floor apartment in Alcorcón town center with natural gas heating and storage room.',
-                    comments: [{ name: 'John Smith', rating: 5, text: 'Great apartment, very well located and spacious rooms.', date: '2026-10-08' }, { name: 'Antonio Jiménez', rating: 2, text: 'Its well connected but very old. The floor creeks, the walls show signs of water damage and the cabinet doors are broken', date: '2026-07-15' }]
+                    comments: [{ _id: new ObjectId(), name: 'John Smith', rating: 5, text: 'Great apartment, very well located and spacious rooms.', date: '2026-10-08' },
+                    { _id: new ObjectId(), name: 'Antonio Jiménez', rating: 2, text: 'Its well connected but very old. The floor creeks, the walls show signs of water damage and the cabinet doors are broken', date: '2026-07-15' }]
                 },
                 {
                     title: 'C. Princesa 31',
@@ -130,7 +141,8 @@ export async function connectDB() {
                     category: 'Shared Apartment',
                     image: 'property8.jpg',
                     description: 'Sunny shared apartment in Moncloa just minutes away from Ciudad Universitaria and Parque del Oeste.',
-                    comments: [{ name: 'John Smith', rating: 5, text: 'Great apartment, very well located and spacious rooms.', date: '2026-10-08' }, { name: 'Antonio Jiménez', rating: 2, text: 'Its well connected but very old. The floor creeks, the walls show signs of water damage and the cabinet doors are broken', date: '2026-07-15' }]
+                    comments: [{ _id: new ObjectId(), name: 'John Smith', rating: 5, text: 'Great apartment, very well located and spacious rooms.', date: '2026-10-08' },
+                    { _id: new ObjectId(), name: 'Antonio Jiménez', rating: 2, text: 'Its well connected but very old. The floor creeks, the walls show signs of water damage and the cabinet doors are broken', date: '2026-07-15' }]
                 },
                 {
                     title: 'C. Gran Vía 12',
@@ -142,13 +154,14 @@ export async function connectDB() {
                     category: 'Room',
                     image: 'property9.jpg',
                     description: 'Exterior private room on Gran Vía with soundproof windows, Wi-Fi, and weekly cleaning included.',
-                    comments: [{ name: 'John Smith', rating: 5, text: 'Great apartment, very well located and spacious rooms.', date: '2026-10-08' }, { name: 'Antonio Jiménez', rating: 2, text: 'Its well connected but very old. The floor creeks, the walls show signs of water damage and the cabinet doors are broken', date: '2026-07-15' }]
+                    comments: [{ _id: new ObjectId(), name: 'John Smith', rating: 5, text: 'Great apartment, very well located and spacious rooms.', date: '2026-10-08' },
+                    { _id: new ObjectId(), name: 'Antonio Jiménez', rating: 2, text: 'Its well connected but very old. The floor creeks, the walls show signs of water damage and the cabinet doors are broken', date: '2026-07-15' }]
                 }
             ]);
             console.log('Initial properties and sample comments inserted into MongoDB');
         }
     } catch (err) {
         console.log('Error connecting to MongoDB:', err);
+        throw err;
     }
-
 }
