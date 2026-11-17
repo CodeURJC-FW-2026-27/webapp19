@@ -5,9 +5,6 @@ import { connectDB } from './db.js';
 
 const app = express();
 
-// Conectar a la base de datos MongoDB
-connectDB();
-
 app.use(express.static('./public'));
 app.use('/uploads', express.static('./uploads'));
 
@@ -17,5 +14,7 @@ app.set('views', './views');
 
 app.use(express.urlencoded({ extended: true }));
 app.use('/', router);
+
+await connectDB();
 
 app.listen(3000, () => console.log('Web ready in http://localhost:3000/'));

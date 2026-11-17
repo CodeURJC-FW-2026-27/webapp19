@@ -32,14 +32,14 @@ function ensureSampleImages() {
 export async function connectDB() {
     try {
         await client.connect();
-        properties = client.db('dreamhouse').collection('properties');
+        Property = client.db('dreamhouse').collection('properties');
         console.log('Connected to local MongoDB');
 
         ensureSampleImages();
 
-        const count = await properties.countDocuments();
+        const count = await Property.countDocuments();
         if (count === 0) {
-            await properties.insertMany([
+            await Property.insertMany([
                 {
                     title: 'C. Río Duero 13, 6ºB',
                     location: 'Móstoles Sur, Madrid',
