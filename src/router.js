@@ -94,15 +94,13 @@ function validateReviewData(body, property, commentId = null) {
     }
 
     const trimmedAuthor = author.trim().toLowerCase();
-    const trimmedComment = comment.trim();
     const duplicateReview = property.comments.some(review =>
         (!commentId || review._id.toString() !== commentId) &&
-        (review.name || '').toLowerCase() === trimmedAuthor &&
-        (review.text || '').trim() === trimmedComment
+        (review.name || '').trim().toLowerCase() === trimmedAuthor
     );
 
     if (duplicateReview) {
-        return 'This review has already been submitted for this property.';
+        return 'This author has already submitted a review for this property.';
     }
 
     return null;
