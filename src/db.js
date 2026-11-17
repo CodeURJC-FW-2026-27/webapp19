@@ -26,7 +26,6 @@ export async function connectDB() {
 
         copyImages();
 
-        // Sample data, only inserted when the database is empty
         const count = await Property.countDocuments();
         if (count === 0) {
             await Property.insertMany([
