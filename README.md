@@ -25,7 +25,7 @@
     * `price` (Number): Price in euros (rent per month).
     * `location` (String): City or neighborhood where the property is located.
     * `description` (String): Detailed description of the property features.
-    * `rooms` (Number): Number of bedrooms in the property.
+    * `bedrooms` (Number): Number of bedrooms in the property.
     * `area` (Number): Total area of the property in square meters.
 
 * **Secondary Entity: Review**
@@ -158,6 +158,32 @@ Where I added the initial configuration and the link to Trello, and documented m
 * [`README.md`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/README.md): I documented my participation.
 
 ## PRACTICE 2
+### How to run the application
+
+1. Start MongoDB (it must be running at `127.0.0.1:27017`).
+2. Install the dependencies and start the server:
+
+```
+npm install
+npm start
+```
+
+3. Open http://localhost:3000 in the browser.
+
+The first time the application starts, it inserts 9 sample properties with their reviews into the `dreamhouse` database and copies the images from `data/` to `uploads/`.
+
+### Demo steps
+
+1. **Home page and pagination:** open `/`. 6 properties are shown per page; use the page numbers and the Previous/Next buttons to go to page 2.
+2. **Search:** type "Madrid" or "Gran" in the search box and press Search. Go to the next page of results to check that the search is kept.
+3. **Categories:** open the Categories menu and choose Rooms, Full Houses or Shared Apartments.
+4. **Property detail:** click View Details on any property to see all its data, its image and its reviews. The property "C. Gran Vía 12" has no reviews.
+5. **Create a property:** click Create a New Property, fill the form and save. Then try to save a title that already exists or that starts with a lowercase letter (remove the browser validations from the DOM first) to see the error page.
+6. **Edit a property:** in the detail page click Edit, change some fields and the image, and save. A confirmation page is shown.
+7. **Add a review:** in the detail page fill the Add a Review form and press Create. Try to add a second review with the same author to see the error page.
+8. **Edit and delete a review:** use the Edit and Delete buttons of a review.
+9. **Delete a property:** in the detail page press Delete. A confirmation page is shown and the property disappears from the home page.
+
 ### Member participation in practice 2
 #### Participation of Paula Sánchez Garduño
 
@@ -177,3 +203,25 @@ Where I added the initial configuration and the link to Trello, and documented m
 * [views/property_detail.html](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/views/property_detail.html): Integrated dynamic Mustache fields, dynamic star ratings, action buttons, and the review submission section.
 * [src/db.js](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/src/db.js): Standardized connection logs in English, seeded initial sample reviews on properties, and added startup logic to copy sample images into `uploads/`.
 * [views/header.html](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/views/header.html): Extracted the navigation bar as a reusable Mustache partial and connected the search bar and category links to the backend filters.
+
+#### Participation of Enrique Aldama Moradillo
+
+**Description of tasks performed:**
+
+* In practice 2, I fixed the connection to MongoDB and cleaned the project so it follows the requirements of the assignment. I moved the sample images to the `data/` folder, which are copied to `uploads/` when the application starts, and I made the images be served from `/uploads`. I fixed the header and footer partials and gave every view, including the confirmation and error pages, the same `<head>`. I fixed the pagination links so they keep the search and the category, and the active menu item. I also improved the validations (length limits in the review form, check that the uploaded file is an image) and unified the names of the review fields. Finally, I removed duplicated code in `router.js` with the `renderError` and `renderConfirmation` functions, simplified the validations and prepared the demo data, the demo steps and the README.
+
+**The 5 most significant commits:**
+
+* [Fix MongoDB connection and remove mongoose](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/COMMIT_HASH): The application waits for `connectDB()` before listening, `Property` is assigned correctly and mongoose is removed from `package.json` and the lock file.
+* [Move images to data/ and serve from uploads](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/COMMIT_HASH): The sample images are in `data/` and are copied to `uploads/` on startup with a loop. The views load the images from `/uploads`.
+* [Fix header and footer partials, add head to views](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/COMMIT_HASH): `header.html` only has the navbar and the banner, `footer.html` has the footer and the scripts, and each view has its own `<head>`.
+* [Remove duplicated code and unify property and review names](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/COMMIT_HASH): Rewrote `router.js` with shared functions for errors, confirmations and validations.
+* [Add varied demo data and demo steps to README](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/COMMIT_HASH): Each property has different sample reviews and the README explains how to run and demo the application.
+
+**The 5 files I have contributed to the most:**
+
+* [src/router.js](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/src/router.js): Shared error and confirmation functions, simplified validations and review routes.
+* [src/db.js](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/src/db.js): Connection fix, copy of the images from `data/` and varied sample data.
+* [views/header.html](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/views/header.html): Header partial with only the navbar and the banner.
+* [views/index.html](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/views/index.html): Pagination links that keep the search and the category.
+* [README.md](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/README.md): Run instructions, demo steps and my participation.
