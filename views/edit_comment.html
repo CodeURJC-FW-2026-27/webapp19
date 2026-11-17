@@ -24,8 +24,8 @@
                         <form action="/property/{{property._id}}/comment/{{comment._id}}/edit" method="POST">
                             <div class="mb-3">
                                 <label for="reviewAuthor" class="form-label">Your Name</label>
-                                <input type="text" class="form-control" id="reviewAuthor" name="author"
-                                    value="{{comment.name}}" required />
+                                <input type="text" class="form-control" id="reviewAuthor" name="author" minlength="2" maxlength="50"
+                                    value="{{comment.author}}" required />
                             </div>
                             <div class="mb-3">
                                 <label for="reviewDate" class="form-label">Date</label>
@@ -45,7 +45,7 @@
                             <div class="mb-3">
                                 <label for="reviewComment" class="form-label">Comment</label>
                                 <textarea class="form-control" id="reviewComment" name="comment" rows="4"
-                                    minlength="5" maxlength="500" required>{{comment.text}}</textarea>
+                                    minlength="5" maxlength="500" required>{{comment.comment}}</textarea>
                             </div>
                             <div class="d-flex justify-content-end gap-2">
                                 <button type="submit" class="btn btn-primary">Save Changes</button>

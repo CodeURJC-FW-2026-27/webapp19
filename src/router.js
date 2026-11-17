@@ -73,8 +73,12 @@ async function validatePropertyData(body, file, existingProperty = null) {
     if (trimmedDesc.length < 20 || trimmedDesc.length > 1000) {
         return 'The description must be between 20 and 1000 characters.';
     }
+    // 7. If a file was uploaded, it must be an image
+    if (file && !file.mimetype.startsWith('image/')) {
+        return 'The uploaded file must be an image.';
+    }
 
-    // 7. An image is required when creating (!existingProperty), but optional when editing
+    // 8. An image is required when creating, but optional when editing
     if (!existingProperty && !file) {
         return 'A property image is required.';
     }
@@ -98,6 +102,10 @@ function validateReviewData(body, property, commentId = null) {
         return 'Please provide a valid date.';
     }
 
+    if (author.trim().length < 2 || author.trim().length > 50) {
+        return 'The author name must be between 2 and 50 characters.';
+    }
+
     if (comment.trim().length < 5 || comment.trim().length > 500) {
         return 'The review text must be between 5 and 500 characters.';
     }
@@ -105,7 +113,7 @@ function validateReviewData(body, property, commentId = null) {
     const trimmedAuthor = author.trim().toLowerCase();
     const duplicateReview = (property.comments || []).some(review =>
         (!commentId || review._id.toString() !== commentId) &&
-        (review.name || '').trim().toLowerCase() === trimmedAuthor
+        (review.author || '').trim().toLowerCase() === trimmedAuthor
     );
 
     if (duplicateReview) {
@@ -459,10 +467,10 @@ router.post('/property/:id/comment', async (req, res) => {
             $push: {
                 comments: {
                     _id: new ObjectId(),
-                    name: trimmedAuthor,
+                    author: trimmedAuthor,
                     date: req.body.date,
                     rating: Number(req.body.rating),
-                    text: req.body.comment.trim()
+                    comment: req.body.comment.trim()
                 }
             }
         });
@@ -557,10 +565,10 @@ router.post('/property/:id/comment/:commentId/edit', async (req, res) => {
             { _id: property._id, 'comments._id': comment._id },
             {
                 $set: {
-                    'comments.$.name': req.body.author.trim(),
+                    'comments.$.author': req.body.author.trim(),
                     'comments.$.date': req.body.date,
                     'comments.$.rating': Number(req.body.rating),
-                    'comments.$.text': req.body.comment.trim()
+                    'comments.$.comment': req.body.comment.trim()
                 }
             }
         );

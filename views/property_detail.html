@@ -63,7 +63,7 @@
                     <div class="card mb-3">
                         <div class="card-body p-2 p-md-3">
                             <div class="d-flex flex-wrap justify-content-start align-items-center mb-2">
-                                <h6 class="fw-bold mb-0">{{name}}</h6>
+                                <h6 class="fw-bold mb-0">{{author}}</h6>
                                 <small class="text-warning ms-1">
                                     {{#stars}}
                                         {{#filled}}<i class="bi bi-star-fill"></i>{{/filled}}
@@ -72,7 +72,7 @@
                                 </small>
                             </div>
                             <small class="text-muted text-start d-block mb-0 w-100 mt-1">{{date}}</small>
-                            <p class="card-text small text-muted">{{text}}</p>
+                            <p class="card-text small text-muted">{{comment}}</p>
                             <div class="d-flex flex-nowrap">
                                 <a class="btn btn-sm btn-outline-secondary"
                                     href="/property/{{property._id}}/comment/{{_id}}/edit">Edit</a>
@@ -95,7 +95,7 @@
                             <form action="/property/{{property._id}}/comment" method="POST">
                                 <div class="mb-3">
                                     <label for="reviewAuthor" class="form-label">Your Name</label>
-                                    <input type="text" class="form-control" id="reviewAuthor" name="author" required
+                                    <input type="text" class="form-control" id="reviewAuthor" name="author" minlength="2" maxlength="50" required
                                         placeholder="e.g. Maria Rodríguez">
                                 </div>
                                 <div class="mb-3">
@@ -114,7 +114,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="reviewComment" class="form-label">Comment</label>
-                                    <textarea class="form-control" id="reviewComment" name="comment" rows="3" required
+                                    <textarea class="form-control" id="reviewComment" name="comment" rows="3" minlength="5" maxlength="500" required
                                         placeholder="Write your review here..."></textarea>
                                 </div>
                                 <div class="d-flex flex-column flex-sm-row justify-content-end gap-2">
