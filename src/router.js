@@ -6,134 +6,142 @@ import { ObjectId } from 'mongodb';
 import { Property } from './db.js';
 
 const router = express.Router();
-// Configure multer to store uploaded images in the uploads/ directory
-const upload = multer({ dest: 'uploads/' });
+
+// Uploaded images are saved in uploads/ keeping their extension
+const storage = multer.diskStorage({
+    destination: 'uploads/',
+    filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
+});
+const upload = multer({ storage });
+
+function renderError(res, status, message, backUrl, backText) {
+    res.status(status).render('error', { errorMessage: message, backUrl, backText });
+}
+
+function renderConfirmation(res, title, message, backUrl, backText) {
+    res.render('confirmation', { title, message, backUrl, backText });
+}
 
 function findPropertyById(id) {
     return Property.findOne({ _id: new ObjectId(id) });
 }
 
-function findComment(property, commentId) {
-    return (property.comments || []).find(c => c._id.toString() === commentId);
+function findReview(property, reviewId) {
+    return property.reviews.find(review => review._id.toString() === reviewId);
 }
 
-// ============================================================================
-// SHARED VALIDATION FUNCTIONS (avoid duplicating code between Create and Edit)
-// ============================================================================
+function deleteImage(filename) {
+    return fs.rm(path.join('uploads', path.basename(filename)), { force: true });
+}
 
-async function validatePropertyData(body, file, existingProperty = null) {
+// Returns the property fields from the form, ready to be saved
+function getPropertyData(body) {
+    return {
+        title: body.title.trim(),
+        location: body.location.trim(),
+        bedrooms: Number(body.bedrooms),
+        area: Number(body.area),
+        price: Number(body.price),
+        status: body.status,
+        category: body.category,
+        description: body.description.trim()
+    };
+}
+
+// Validation functions: they return an error message or null if everything is correct
+
+async function validateProperty(body, file, property) {
     const { title, location, bedrooms, area, price, status, category, description } = body;
 
-    // 1. Check that every required field contains a value
-    const requiredFields = [title, location, bedrooms, area, price, status, category, description];
-    if (requiredFields.some(value => typeof value !== 'string' || value.trim() === '')) {
+    if (!title || !location || !bedrooms || !area || !price || !status || !category || !description) {
         return 'All property fields are required.';
     }
-
-    // 2. Check that the title starts with an uppercase letter
-    const trimmedTitle = title.trim();
-    if (!/^[A-ZÁÉÍÓÚÜÑ]/.test(trimmedTitle)) {
+    if (!title.trim() || !location.trim() || !description.trim()) {
+        return 'All property fields are required.';
+    }
+    if (!/^[A-ZÁÉÍÓÚÜÑ]/.test(title.trim())) {
         return 'The property title must start with an uppercase letter.';
     }
 
-    // 3. Check that no other property has the same title
-    // When editing (existingProperty != null), exclude the current property from the search
-    const duplicateQuery = { title: trimmedTitle };
-    if (existingProperty) {
-        duplicateQuery._id = { $ne: existingProperty._id };
-    }
-    const existing = await Property.findOne(duplicateQuery);
-    if (existing) {
+    // When editing, the property can keep its own title
+    const sameTitle = await Property.findOne({
+        title: title.trim(),
+        _id: { $ne: property ? property._id : null }
+    });
+    if (sameTitle) {
         return 'A property with this title already exists.';
     }
 
-    // 4. Check that numeric fields are within valid ranges
-    const numBedrooms = Number(bedrooms);
-    const numArea = Number(area);
-    const numPrice = Number(price);
-
-    if (
-        !Number.isInteger(numBedrooms) || numBedrooms < 0 || numBedrooms > 20 ||
-        !Number.isFinite(numArea) || numArea < 1 || numArea > 5000 ||
-        !Number.isFinite(numPrice) || numPrice < 1 || numPrice > 50000
-    ) {
-        return 'Bedrooms, area, or price are outside their allowed ranges.';
+    if (!Number.isInteger(Number(bedrooms)) || !(bedrooms >= 0 && bedrooms <= 20)) {
+        return 'Bedrooms must be a whole number between 0 and 20.';
     }
-
-    // 5. Check that status and category are allowed values
+    if (!(area >= 1 && area <= 5000)) {
+        return 'Area must be between 1 and 5000 m2.';
+    }
+    if (!(price >= 1 && price <= 50000)) {
+        return 'Price must be between 1 and 50000 euros.';
+    }
     if (!['Available', 'Rented'].includes(status)) {
         return 'Invalid property status.';
     }
     if (!['Shared Apartment', 'Full House', 'Room'].includes(category)) {
         return 'Invalid property category.';
     }
-
-    // 6. Check minimum and maximum length for the description
-    const trimmedDesc = description.trim();
-    if (trimmedDesc.length < 20 || trimmedDesc.length > 1000) {
+    if (description.trim().length < 20 || description.trim().length > 1000) {
         return 'The description must be between 20 and 1000 characters.';
     }
-    // 7. If a file was uploaded, it must be an image
+
     if (file && !file.mimetype.startsWith('image/')) {
         return 'The uploaded file must be an image.';
     }
-
-    // 8. An image is required when creating, but optional when editing
-    if (!existingProperty && !file) {
+    // The image is required when creating, but optional when editing
+    if (!property && !file) {
         return 'A property image is required.';
     }
-
-    return null; // null means all validations passed
+    return null;
 }
 
-function validateReviewData(body, property, commentId = null) {
+function validateReview(body, property, reviewId) {
     const { author, date, rating, comment } = body;
 
-    if (!author || !author.trim() || !date || !rating || !comment || !comment.trim()) {
+    if (!author || !date || !rating || !comment || !author.trim() || !comment.trim()) {
         return 'All review fields (author, date, rating, and comment) are required.';
     }
-
-    const numRating = Number(rating);
-    if (!Number.isInteger(numRating) || numRating < 1 || numRating > 5) {
-        return 'Rating must be a number between 1 and 5.';
-    }
-
-    if (Number.isNaN(Date.parse(date))) {
-        return 'Please provide a valid date.';
-    }
-
     if (author.trim().length < 2 || author.trim().length > 50) {
         return 'The author name must be between 2 and 50 characters.';
     }
-
+    if (Number.isNaN(Date.parse(date))) {
+        return 'Please provide a valid date.';
+    }
+    if (!Number.isInteger(Number(rating)) || rating < 1 || rating > 5) {
+        return 'Rating must be a number between 1 and 5.';
+    }
     if (comment.trim().length < 5 || comment.trim().length > 500) {
         return 'The review text must be between 5 and 500 characters.';
     }
 
-    const trimmedAuthor = author.trim().toLowerCase();
-    const duplicateReview = (property.comments || []).some(review =>
-        (!commentId || review._id.toString() !== commentId) &&
-        (review.author || '').trim().toLowerCase() === trimmedAuthor
+    // An author can only review a property once (the review being edited does not count)
+    const repeated = property.reviews.some(review =>
+        review._id.toString() !== reviewId &&
+        review.author.toLowerCase() === author.trim().toLowerCase()
     );
-
-    if (duplicateReview) {
+    if (repeated) {
         return 'This author has already submitted a review for this property.';
     }
-
     return null;
 }
 
 // ============================================================================
-// MAIN PAGE (Listing + Pagination + Search + Category Filter)
+// MAIN PAGE (listing, pagination, search and category filter)
 // ============================================================================
 
 router.get('/', async (req, res) => {
     try {
-        const perPage = 6; // Maximum 6 properties per page
+        const perPage = 6;
         const page = Math.max(1, parseInt(req.query.page) || 1);
         const search = req.query.search ? req.query.search.trim() : '';
-        const category = (req.query.type || req.query.category || '').trim();
-        // Build the MongoDB filter if the user searched by text or selected a category
+        const category = req.query.type ? req.query.type.trim() : '';
+
         const filter = {};
         if (search) {
             filter.$or = [
@@ -147,23 +155,21 @@ router.get('/', async (req, res) => {
 
         const totalProperties = await Property.countDocuments(filter);
         const totalPages = Math.max(1, Math.ceil(totalProperties / perPage));
-
         const properties = await Property.find(filter)
             .skip((page - 1) * perPage)
             .limit(perPage)
             .toArray();
 
-        // Use 'category' instead of undefined 'type' variable when building pagination query params
-        const querySuffix = `${search ? `&search=${encodeURIComponent(search)}` : ''}${category ? `&type=${encodeURIComponent(category)}` : ''}`;
+        // Page links keep the search and the category
+        let query = '';
+        if (search) query += `&search=${encodeURIComponent(search)}`;
+        if (category) query += `&type=${encodeURIComponent(category)}`;
+
         const pages = [];
         for (let i = 1; i <= totalPages; i++) {
-            pages.push({
-                number: i,
-                isCurrent: i === page,
-                url: `/?page=${i}${querySuffix}`
-            });
+            pages.push({ number: i, isCurrent: i === page, url: `/?page=${i}${query}` });
         }
-        // Pass category helper booleans for navbar active states and fix prevPageUrl syntax
+
         res.render('index', {
             properties,
             pages,
@@ -173,20 +179,20 @@ router.get('/', async (req, res) => {
             isSharedApartment: category === 'Shared Apartment',
             isFullHouse: category === 'Full House',
             isRoom: category === 'Room',
-            hasNextPage: page < totalPages,
-            nextPageUrl: `/?page=${page + 1}${querySuffix}`,
             hasPrevPage: page > 1,
-            prevPageUrl: `/?page=${page - 1}${querySuffix}`
+            prevPageUrl: `/?page=${page - 1}${query}`,
+            hasNextPage: page < totalPages,
+            nextPageUrl: `/?page=${page + 1}${query}`
         });
     } catch (err) {
         console.error('Error retrieving properties:', err);
-        res.status(500).render('error', {
-            errorMessage: 'An error occurred while loading the properties.',
-            backUrl: '/',
-            backText: 'Try Again'
-        });
+        renderError(res, 500, 'An error occurred while loading the properties.', '/', 'Try Again');
     }
 });
+
+// ============================================================================
+// PROPERTIES (create, detail, edit and delete)
+// ============================================================================
 
 router.get('/new_property', (req, res) => {
     res.render('new_property', {
@@ -200,102 +206,57 @@ router.get('/new_property', (req, res) => {
 });
 
 router.post('/new_property', upload.single('image'), async (req, res) => {
-    const formError = (errorMessage, status = 400) => res.status(status).render('error', {
-        errorMessage,
-        backUrl: '/new_property',
-        backText: 'Back to the creation form'
-    });
     try {
-        const { title, category, status, price, location, description, bedrooms, area } = req.body;
-        const validationError = await validatePropertyData(req.body, req.file);
-        if (validationError) {
-            if (req.file) await fs.rm(req.file.path, { force: true });
-            return formError(validationError);
+        const errorMsg = await validateProperty(req.body, req.file, null);
+        if (errorMsg) {
+            if (req.file) await deleteImage(req.file.filename);
+            return renderError(res, 400, errorMsg, '/new_property', 'Back to the creation form');
         }
 
-        const result = await Property.insertOne({
-            title: title.trim(),
-            category,
-            status,
-            price: Number(price),
-            location: location.trim(),
-            description: description.trim(),
-            bedrooms: Number(bedrooms),
-            area: Number(area),
-            image: req.file.filename,
-            comments: []
-        });
+        const property = getPropertyData(req.body);
+        property.image = req.file.filename;
+        property.reviews = [];
+        const result = await Property.insertOne(property);
 
-        res.render('confirmation', {
-            title: 'Property Created',
-            message: 'The property has been added successfully.',
-            backUrl: `/property/${result.insertedId}`,
-            backText: 'View Property'
-        });
+        renderConfirmation(res, 'Property Created', 'The property has been added successfully.',
+            `/property/${result.insertedId}`, 'View Property');
     } catch (err) {
-        console.error('Error creating property: ', err);
-        if (req.file) {
-            try {
-                await fs.rm(req.file.path, { force: true });
-            } catch (cleanupError) {
-                console.error('Error removing uploaded image after failed creation:', cleanupError);
-            }
-        }
-        return formError('An unexpected error occurred while saving the property.', 500);
+        console.error('Error creating property:', err);
+        if (req.file) await deleteImage(req.file.filename);
+        renderError(res, 500, 'An unexpected error occurred while saving the property.', '/new_property', 'Try Again');
     }
 });
 
-//Property detail page route
 router.get('/property/:id', async (req, res) => {
     try {
         const property = await findPropertyById(req.params.id);
-
         if (!property) {
-            return res.status(404).render('error', {
-                errorMessage: 'Property not found.',
-                backUrl: '/',
-                backText: 'Back to Home'
-            });
+            return renderError(res, 404, 'Property not found.', '/', 'Back to Home');
         }
 
-        // Convert numeric rating (1-5) into a 5-element array of stars for Mustache
-        if (property.comments && property.comments.length > 0) {
-            property.comments = property.comments.map(comment => {
-                const stars = [];
-                for (let i = 1; i <= 5; i++) {
-                    stars.push({ filled: i <= comment.rating });
-                }
-                return { ...comment, stars };
-            });
+        // Each review gets a list of 5 stars (filled or empty) for Mustache
+        for (const review of property.reviews) {
+            review.stars = [];
+            for (let i = 1; i <= 5; i++) {
+                review.stars.push({ filled: i <= review.rating });
+            }
         }
 
         res.render('property_detail', { property });
     } catch (err) {
         console.error('Error retrieving property details:', err);
-        res.status(500).render('error', {
-            errorMessage: 'An error occurred while retrieving the property details.',
-            backUrl: '/',
-            backText: 'Back to Home'
-        });
+        renderError(res, 500, 'An error occurred while retrieving the property details.', '/', 'Back to Home');
     }
 });
-
-// ============================================================================
-// EDIT PROPERTY (GET loads form with current data, POST saves updates)
-// ============================================================================
 
 router.get('/property/:id/edit', async (req, res) => {
     try {
         const property = await findPropertyById(req.params.id);
         if (!property) {
-            return res.status(404).render('error', {
-                errorMessage: 'Property not found.',
-                backUrl: '/',
-                backText: 'Back to Home'
-            });
+            return renderError(res, 404, 'Property not found.', '/', 'Back to Home');
         }
 
-        // Reuse the SAME new_property.html template with isEdit: true and prefilled data
+        // The same form as new_property is used, with the current data
         res.render('new_property', {
             isEdit: true,
             formAction: `/property/${property._id}/edit`,
@@ -303,7 +264,6 @@ router.get('/property/:id/edit', async (req, res) => {
             submitText: 'Save Changes',
             cancelUrl: `/property/${property._id}`,
             property,
-            // Helper booleans so Mustache marks the matching <option> as 'selected'
             isAvailable: property.status === 'Available',
             isRented: property.status === 'Rented',
             isSelShared: property.category === 'Shared Apartment',
@@ -312,11 +272,7 @@ router.get('/property/:id/edit', async (req, res) => {
         });
     } catch (err) {
         console.error('Error loading edit property form:', err);
-        res.status(500).render('error', {
-            errorMessage: 'An error occurred while loading the edit form.',
-            backUrl: '/',
-            backText: 'Back to Home'
-        });
+        renderError(res, 500, 'An error occurred while loading the edit form.', '/', 'Back to Home');
     }
 });
 
@@ -324,150 +280,77 @@ router.post('/property/:id/edit', upload.single('image'), async (req, res) => {
     try {
         const property = await findPropertyById(req.params.id);
         if (!property) {
-            if (req.file) await fs.rm(req.file.path, { force: true });
-            return res.status(404).render('error', {
-                errorMessage: 'Property not found.',
-                backUrl: '/',
-                backText: 'Back to Home'
-            });
+            if (req.file) await deleteImage(req.file.filename);
+            return renderError(res, 404, 'Property not found.', '/', 'Back to Home');
         }
 
-        // Validate using the shared function, passing 'property' to allow keeping its own title
-        const errorMsg = await validatePropertyData(req.body, req.file, property);
+        const errorMsg = await validateProperty(req.body, req.file, property);
         if (errorMsg) {
-            if (req.file) await fs.rm(req.file.path, { force: true });
-            return res.status(400).render('error', {
-                errorMessage: errorMsg,
-                backUrl: `/property/${property._id}/edit`,
-                backText: 'Back to Edit Form'
-            });
+            if (req.file) await deleteImage(req.file.filename);
+            return renderError(res, 400, errorMsg, `/property/${property._id}/edit`, 'Back to Edit Form');
         }
 
-        let oldImagePath;
+        const newData = getPropertyData(req.body);
         if (req.file) {
-            if (property.image) {
-                oldImagePath = path.resolve('uploads', path.basename(property.image));
-            }
-            property.image = req.file.filename;
+            newData.image = req.file.filename;
+        }
+        await Property.updateOne({ _id: property._id }, { $set: newData });
+
+        // The old image is not needed anymore
+        if (req.file) {
+            await deleteImage(property.image);
         }
 
-        // Update the remaining property fields
-        property.title = req.body.title.trim();
-        property.location = req.body.location.trim();
-        property.bedrooms = Number(req.body.bedrooms);
-        property.area = Number(req.body.area);
-        property.price = Number(req.body.price);
-        property.status = req.body.status;
-        property.category = req.body.category;
-        property.description = req.body.description.trim();
-
-        await Property.updateOne({ _id: property._id }, {
-            $set: {
-                title: property.title,
-                location: property.location,
-                bedrooms: property.bedrooms,
-                area: property.area,
-                price: property.price,
-                status: property.status,
-                category: property.category,
-                description: property.description,
-                image: property.image
-            }
-        });
-
-        if (oldImagePath) {
-            try {
-                await fs.rm(oldImagePath, { force: true });
-            } catch (cleanupError) {
-                console.error('Property updated, but the previous image could not be removed:', cleanupError);
-            }
-        }
-
-        res.render('confirmation', {
-            title: 'Property Updated',
-            message: 'The property has been updated successfully.',
-            backUrl: `/property/${property._id}`,
-            backText: 'Back to Property Details'
-        });
+        renderConfirmation(res, 'Property Updated', 'The property has been updated successfully.',
+            `/property/${property._id}`, 'Back to Property Details');
     } catch (err) {
-        if (req.file) await fs.rm(req.file.path, { force: true });
         console.error('Error updating property:', err);
-        res.status(500).render('error', {
-            errorMessage: 'An error occurred while updating the property.',
-            backUrl: `/property/${req.params.id}/edit`,
-            backText: 'Try Again'
-        });
+        if (req.file) await deleteImage(req.file.filename);
+        renderError(res, 500, 'An error occurred while updating the property.',
+            `/property/${req.params.id}/edit`, 'Try Again');
     }
 });
-
-// ============================================================================
-// DELETE PROPERTY (Removes from MongoDB and deletes its image from uploads/)
-// ============================================================================
 
 router.post('/property/:id/delete', async (req, res) => {
     try {
         const property = await findPropertyById(req.params.id);
         if (!property) {
-            return res.status(404).render('error', {
-                errorMessage: 'Property not found.',
-                backUrl: '/',
-                backText: 'Back to Home'
-            });
+            return renderError(res, 404, 'Property not found.', '/', 'Back to Home');
         }
+
         await Property.deleteOne({ _id: property._id });
+        await deleteImage(property.image);
 
-        // Delete the physical image file from the uploads/ directory
-        if (property.image) {
-            await fs.rm(path.resolve('uploads', path.basename(property.image)), { force: true });
-        }
-
-        res.render('confirmation', {
-            title: 'Property Deleted',
-            message: 'The property has been deleted successfully.',
-            backUrl: '/',
-            backText: 'Back to Home'
-        });
+        renderConfirmation(res, 'Property Deleted', 'The property has been deleted successfully.',
+            '/', 'Back to Home');
     } catch (err) {
         console.error('Error deleting property:', err);
-        res.status(500).render('error', {
-            errorMessage: 'An error occurred while deleting the property.',
-            backUrl: `/property/${req.params.id}`,
-            backText: 'Back to Property'
-        });
+        renderError(res, 500, 'An error occurred while deleting the property.',
+            `/property/${req.params.id}`, 'Back to Property');
     }
 });
 
 // ============================================================================
-// REVIEWS / COMMENTS (Create, Edit, and Delete)
+// REVIEWS (create, edit and delete)
 // ============================================================================
 
-// Create a new review
-router.post('/property/:id/comment', async (req, res) => {
+router.post('/property/:id/review', async (req, res) => {
     try {
         const property = await findPropertyById(req.params.id);
         if (!property) {
-            return res.status(404).render('error', {
-                errorMessage: 'Property not found.',
-                backUrl: '/',
-                backText: 'Back to Home'
-            });
+            return renderError(res, 404, 'Property not found.', '/', 'Back to Home');
         }
 
-        const errorMsg = validateReviewData(req.body, property);
+        const errorMsg = validateReview(req.body, property, null);
         if (errorMsg) {
-            return res.status(400).render('error', {
-                errorMessage: errorMsg,
-                backUrl: `/property/${req.params.id}`,
-                backText: 'Back to Property'
-            });
+            return renderError(res, 400, errorMsg, `/property/${property._id}`, 'Back to Property');
         }
 
-        const trimmedAuthor = req.body.author.trim();
         await Property.updateOne({ _id: property._id }, {
             $push: {
-                comments: {
+                reviews: {
                     _id: new ObjectId(),
-                    author: trimmedAuthor,
+                    author: req.body.author.trim(),
                     date: req.body.date,
                     rating: Number(req.body.rating),
                     comment: req.body.comment.trim()
@@ -475,157 +358,100 @@ router.post('/property/:id/comment', async (req, res) => {
             }
         });
 
-        res.render('confirmation', {
-            title: 'Review Submitted',
-            message: 'Your review has been added successfully.',
-            backUrl: `/property/${req.params.id}`,
-            backText: 'Back to Property Details'
-        });
+        renderConfirmation(res, 'Review Submitted', 'Your review has been added successfully.',
+            `/property/${property._id}`, 'Back to Property Details');
     } catch (err) {
-        console.error('Error saving comment:', err);
-        res.status(500).render('error', {
-            errorMessage: 'An unexpected error occurred while saving your review.',
-            backUrl: `/property/${req.params.id}`,
-            backText: 'Back to Property'
-        });
+        console.error('Error saving review:', err);
+        renderError(res, 500, 'An unexpected error occurred while saving your review.',
+            `/property/${req.params.id}`, 'Back to Property');
     }
 });
 
-// Show form to edit an existing review
-router.get('/property/:id/comment/:commentId/edit', async (req, res) => {
+router.get('/property/:id/review/:reviewId/edit', async (req, res) => {
     try {
         const property = await findPropertyById(req.params.id);
         if (!property) {
-            return res.status(404).render('error', {
-                errorMessage: 'Property not found.',
-                backUrl: '/',
-                backText: 'Back to Home'
-            });
+            return renderError(res, 404, 'Property not found.', '/', 'Back to Home');
         }
 
-        const comment = findComment(property, req.params.commentId);
-        if (!comment) {
-            return res.status(404).render('error', {
-                errorMessage: 'Review not found.',
-                backUrl: `/property/${property._id}`,
-                backText: 'Back to Property'
-            });
+        const review = findReview(property, req.params.reviewId);
+        if (!review) {
+            return renderError(res, 404, 'Review not found.', `/property/${property._id}`, 'Back to Property');
         }
 
-        res.render('edit_comment', {
-            property,
-            comment,
-            isRating1: comment.rating === 1,
-            isRating2: comment.rating === 2,
-            isRating3: comment.rating === 3,
-            isRating4: comment.rating === 4,
-            isRating5: comment.rating === 5
-        });
+        // Options of the rating select, the current rating is marked as selected
+        const ratings = [];
+        for (let i = 5; i >= 1; i--) {
+            ratings.push({ value: i, label: i === 1 ? '1 Star' : `${i} Stars`, selected: i === review.rating });
+        }
+
+        res.render('edit_review', { property, review, ratings });
     } catch (err) {
         console.error('Error loading edit review form:', err);
-        res.status(500).render('error', {
-            errorMessage: 'An error occurred while loading the review edit form.',
-            backUrl: `/property/${req.params.id}`,
-            backText: 'Back to Property'
-        });
+        renderError(res, 500, 'An error occurred while loading the review edit form.',
+            `/property/${req.params.id}`, 'Back to Property');
     }
 });
 
-// Save updates to an edited review
-router.post('/property/:id/comment/:commentId/edit', async (req, res) => {
+router.post('/property/:id/review/:reviewId/edit', async (req, res) => {
     try {
         const property = await findPropertyById(req.params.id);
         if (!property) {
-            return res.status(404).render('error', {
-                errorMessage: 'Property not found.',
-                backUrl: '/',
-                backText: 'Back to Home'
-            });
+            return renderError(res, 404, 'Property not found.', '/', 'Back to Home');
         }
 
-        const comment = findComment(property, req.params.commentId);
-        if (!comment) {
-            return res.status(404).render('error', {
-                errorMessage: 'Review not found.',
-                backUrl: `/property/${property._id}`,
-                backText: 'Back to Property'
-            });
+        const review = findReview(property, req.params.reviewId);
+        if (!review) {
+            return renderError(res, 404, 'Review not found.', `/property/${property._id}`, 'Back to Property');
         }
 
-        const errorMsg = validateReviewData(req.body, property, req.params.commentId);
+        const errorMsg = validateReview(req.body, property, req.params.reviewId);
         if (errorMsg) {
-            return res.status(400).render('error', {
-                errorMessage: errorMsg,
-                backUrl: `/property/${req.params.id}/comment/${req.params.commentId}/edit`,
-                backText: 'Back to Edit Review'
-            });
+            return renderError(res, 400, errorMsg,
+                `/property/${property._id}/review/${review._id}/edit`, 'Back to Edit Review');
         }
 
         await Property.updateOne(
-            { _id: property._id, 'comments._id': comment._id },
+            { _id: property._id, 'reviews._id': review._id },
             {
                 $set: {
-                    'comments.$.author': req.body.author.trim(),
-                    'comments.$.date': req.body.date,
-                    'comments.$.rating': Number(req.body.rating),
-                    'comments.$.comment': req.body.comment.trim()
+                    'reviews.$.author': req.body.author.trim(),
+                    'reviews.$.date': req.body.date,
+                    'reviews.$.rating': Number(req.body.rating),
+                    'reviews.$.comment': req.body.comment.trim()
                 }
             }
         );
 
-        res.render('confirmation', {
-            title: 'Review Updated',
-            message: 'Your review has been updated successfully.',
-            backUrl: `/property/${property._id}`,
-            backText: 'Back to Property Details'
-        });
+        renderConfirmation(res, 'Review Updated', 'Your review has been updated successfully.',
+            `/property/${property._id}`, 'Back to Property Details');
     } catch (err) {
         console.error('Error updating review:', err);
-        res.status(500).render('error', {
-            errorMessage: 'An error occurred while updating the review.',
-            backUrl: `/property/${req.params.id}`,
-            backText: 'Back to Property'
-        });
+        renderError(res, 500, 'An error occurred while updating the review.',
+            `/property/${req.params.id}`, 'Back to Property');
     }
 });
 
-// Delete a review
-router.post('/property/:id/comment/:commentId/delete', async (req, res) => {
+router.post('/property/:id/review/:reviewId/delete', async (req, res) => {
     try {
         const property = await findPropertyById(req.params.id);
         if (!property) {
-            return res.status(404).render('error', {
-                errorMessage: 'Property not found.',
-                backUrl: '/',
-                backText: 'Back to Home'
-            });
+            return renderError(res, 404, 'Property not found.', '/', 'Back to Home');
         }
 
-        const comment = findComment(property, req.params.commentId);
-        if (!comment) {
-            return res.status(404).render('error', {
-                errorMessage: 'Review not found.',
-                backUrl: `/property/${property._id}`,
-                backText: 'Back to Property'
-            });
+        const review = findReview(property, req.params.reviewId);
+        if (!review) {
+            return renderError(res, 404, 'Review not found.', `/property/${property._id}`, 'Back to Property');
         }
 
-        // Remove the review from the comments array
-        await Property.updateOne({ _id: property._id }, { $pull: { comments: { _id: comment._id } } });
+        await Property.updateOne({ _id: property._id }, { $pull: { reviews: { _id: review._id } } });
 
-        res.render('confirmation', {
-            title: 'Review Deleted',
-            message: 'The review has been deleted successfully.',
-            backUrl: `/property/${property._id}`,
-            backText: 'Back to Property Details'
-        });
+        renderConfirmation(res, 'Review Deleted', 'The review has been deleted successfully.',
+            `/property/${property._id}`, 'Back to Property Details');
     } catch (err) {
         console.error('Error deleting review:', err);
-        res.status(500).render('error', {
-            errorMessage: 'An error occurred while deleting the review.',
-            backUrl: `/property/${req.params.id}`,
-            backText: 'Back to Property'
-        });
+        renderError(res, 500, 'An error occurred while deleting the review.',
+            `/property/${req.params.id}`, 'Back to Property');
     }
 });
 

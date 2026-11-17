@@ -59,7 +59,7 @@
                     <h3 class="mb-4">Reviews & Comments</h3>
 
                     <!-- List of secondary entity items -->
-                    {{#property.comments}}
+                    {{#property.reviews}}
                     <div class="card mb-3">
                         <div class="card-body p-2 p-md-3">
                             <div class="d-flex flex-wrap justify-content-start align-items-center mb-2">
@@ -75,24 +75,24 @@
                             <p class="card-text small text-muted">{{comment}}</p>
                             <div class="d-flex flex-nowrap">
                                 <a class="btn btn-sm btn-outline-secondary"
-                                    href="/property/{{property._id}}/comment/{{_id}}/edit">Edit</a>
-                                <form action="/property/{{property._id}}/comment/{{_id}}/delete" method="POST"
+                                    href="/property/{{property._id}}/review/{{_id}}/edit">Edit</a>
+                                <form action="/property/{{property._id}}/review/{{_id}}/delete" method="POST"
                                     class="d-inline">
                                     <button class="btn btn-sm btn-outline-danger ms-1" type="submit">Delete</button>
                                 </form>
                             </div>
                         </div>
                     </div>
-                    {{/property.comments}}
-                    {{^property.comments}}
+                    {{/property.reviews}}
+                    {{^property.reviews}}
                     <p class="text-muted">No reviews yet. Be the first to leave one!</p>
-                    {{/property.comments}}
+                    {{/property.reviews}}
                     
                     <!-- Form to create a new secondary entity item -->
                     <div class="card mt-4 bg-light">
                         <div class="card-body">
                             <h5 class="card-title mb-3">Add a Review</h5>
-                            <form action="/property/{{property._id}}/comment" method="POST">
+                            <form action="/property/{{property._id}}/review" method="POST">
                                 <div class="mb-3">
                                     <label for="reviewAuthor" class="form-label">Your Name</label>
                                     <input type="text" class="form-control" id="reviewAuthor" name="author" minlength="2" maxlength="50" required
