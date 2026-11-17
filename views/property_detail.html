@@ -74,8 +74,12 @@
                             <small class="text-muted text-start d-block mb-0 w-100 mt-1">{{date}}</small>
                             <p class="card-text small text-muted">{{text}}</p>
                             <div class="d-flex flex-nowrap">
-                                <button class="btn btn-sm btn-outline-secondary" type="button">Edit</button>
-                                <button class="btn btn-sm btn-outline-danger ms-1" type="button">Delete</button>
+                                <a class="btn btn-sm btn-outline-secondary"
+                                    href="/property/{{property._id}}/comment/{{_id}}/edit">Edit</a>
+                                <form action="/property/{{property._id}}/comment/{{_id}}/delete" method="POST"
+                                    class="d-inline">
+                                    <button class="btn btn-sm btn-outline-danger ms-1" type="submit">Delete</button>
+                                </form>
                             </div>
                         </div>
                     </div>
