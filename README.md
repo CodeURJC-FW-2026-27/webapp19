@@ -70,7 +70,7 @@ These are the screenshots for the 3 parts required:
 
 ### Member participation in practice 1
 
-##### Participation of Paula Sánchez Garduño
+#### Participation of Paula Sánchez Garduño
 
 **Description of tasks performed:**
 
@@ -99,7 +99,7 @@ For the additional style adjustments I had to make to the template.
 * [`README.md`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/README.md)
 Where I added the initial configuration and the link to Trello, and documented my part of the work.
 
-##### Participation of Diego Rodríguez Salinas
+#### Participation of Diego Rodríguez Salinas
 
 **Description of tasks performed:**
 
@@ -121,7 +121,7 @@ Where I added the initial configuration and the link to Trello, and documented m
 * [`new_property.html`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/new_property.html): Created the property form and its page layout.
 * [`property_detail.html`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/property_detail.html): Fixed the duplicated property image and details, corrected the area to match the home page, and applied cover cropping.
 
-##### Participation of Rodrigo Fernández de Córdoba García
+#### Participation of Rodrigo Fernández de Córdoba García
 * In this phase of the project, I mostly focused on the entity page. In the first part, when deciding the theme and structure, I proposed the theme and filters for the page. For the rest of the project I focused on creating the secondary entity page, adapting it to the template and fixing other CSS issues. The commits made were only 2, but the focus was on having each commit deliver a finished part instead of non functional pieces
 
 **The most significant commits:**
@@ -135,7 +135,7 @@ Where I added the initial configuration and the link to Trello, and documented m
 * [`index.html`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/index.html): Fixed CSS issues
 * [`property_detail.html](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/new_property.html): Created the page and adapted it to the template
 
-##### Participation of Enrique Aldama Moradillo
+#### Participation of Enrique Aldama Moradillo
 
 **Description of tasks performed:**
 
@@ -159,7 +159,7 @@ Where I added the initial configuration and the link to Trello, and documented m
 
 ## PRACTICE 2
 ### Member participation in practice 2
-###### Participation of Paula Sánchez Garduño
+#### Participation of Paula Sánchez Garduño
 
 **Description of tasks performed:**
 * During Practice 2, I was responsible for setting up the server architecture and migrating the static frontend into a dynamic Node.js and Express web application connected to MongoDB. I restructured the project folders (`src/`, `views/`, `public/`), configured Mustache templates along with reusable partials (`header.html`, `footer.html`, `confirmation.html`, and `error.html`), and updated the data models to named ESM exports. On the backend, I implemented server-side pagination (6 items per page), full search and category filtering in the main route, and the complete creation, editing, deletion, and server-side validation logic for both properties and reviews. Finally, I configured Multer to handle image uploads into the `uploads/` folder and updated `db.js` to automatically seed sample reviews and copy initial property images on startup.
