@@ -73,15 +73,15 @@ async function validatePropertyData(body, file, existingProperty = null) {
     return null; // null means all validations passed
 }
 
-function validateReviewData(body) {
+function validateReviewData(body, property, commentId = null) {
     const { author, date, rating, comment } = body;
 
-    if (!author || !date || !rating || !comment) {
+    if (!author || !author.trim() || !date || !rating || !comment || !comment.trim()) {
         return 'All review fields (author, date, rating, and comment) are required.';
     }
 
     const numRating = Number(rating);
-    if (Number.isNaN(numRating) || numRating < 1 || numRating > 5) {
+    if (!Number.isInteger(numRating) || numRating < 1 || numRating > 5) {
         return 'Rating must be a number between 1 and 5.';
     }
 
@@ -91,6 +91,18 @@ function validateReviewData(body) {
 
     if (comment.trim().length < 5 || comment.trim().length > 500) {
         return 'The review text must be between 5 and 500 characters.';
+    }
+
+    const trimmedAuthor = author.trim().toLowerCase();
+    const trimmedComment = comment.trim();
+    const duplicateReview = property.comments.some(review =>
+        (!commentId || review._id.toString() !== commentId) &&
+        (review.name || '').toLowerCase() === trimmedAuthor &&
+        (review.text || '').trim() === trimmedComment
+    );
+
+    if (duplicateReview) {
+        return 'This review has already been submitted for this property.';
     }
 
     return null;
@@ -417,15 +429,6 @@ router.get('/property/:id/image', async (req, res) => {
 // Create a new review
 router.post('/property/:id/comment', async (req, res) => {
     try {
-        const errorMsg = validateReviewData(req.body);
-        if (errorMsg) {
-            return res.status(400).render('error', {
-                errorMessage: errorMsg,
-                backUrl: `/property/${req.params.id}`,
-                backText: 'Back to Property'
-            });
-        }
-
         const property = await Property.findById(req.params.id);
         if (!property) {
             return res.status(404).render('error', {
@@ -435,19 +438,16 @@ router.post('/property/:id/comment', async (req, res) => {
             });
         }
 
-        // Prevent duplicate reviews from the same author with the exact same text
-        const trimmedAuthor = req.body.author.trim();
-        const duplicateReview = property.comments.some(
-            c => c.name.toLowerCase() === trimmedAuthor.toLowerCase() && c.text.trim() === req.body.comment.trim()
-        );
-        if (duplicateReview) {
+        const errorMsg = validateReviewData(req.body, property);
+        if (errorMsg) {
             return res.status(400).render('error', {
-                errorMessage: 'This review has already been submitted for this property.',
+                errorMessage: errorMsg,
                 backUrl: `/property/${req.params.id}`,
                 backText: 'Back to Property'
             });
         }
 
+        const trimmedAuthor = req.body.author.trim();
         property.comments.push({
             name: trimmedAuthor,
             date: req.body.date,
@@ -515,15 +515,6 @@ router.get('/property/:id/comment/:commentId/edit', async (req, res) => {
 // Save updates to an edited review
 router.post('/property/:id/comment/:commentId/edit', async (req, res) => {
     try {
-        const errorMsg = validateReviewData(req.body);
-        if (errorMsg) {
-            return res.status(400).render('error', {
-                errorMessage: errorMsg,
-                backUrl: `/property/${req.params.id}/comment/${req.params.commentId}/edit`,
-                backText: 'Back to Edit Review'
-            });
-        }
-
         const property = await Property.findById(req.params.id);
         if (!property) {
             return res.status(404).render('error', {
@@ -539,6 +530,15 @@ router.post('/property/:id/comment/:commentId/edit', async (req, res) => {
                 errorMessage: 'Review not found.',
                 backUrl: `/property/${property._id}`,
                 backText: 'Back to Property'
+            });
+        }
+
+        const errorMsg = validateReviewData(req.body, property, req.params.commentId);
+        if (errorMsg) {
+            return res.status(400).render('error', {
+                errorMessage: errorMsg,
+                backUrl: `/property/${req.params.id}/comment/${req.params.commentId}/edit`,
+                backText: 'Back to Edit Review'
             });
         }
 
