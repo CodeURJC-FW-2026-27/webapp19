@@ -2,11 +2,20 @@ import express from 'express';
 import multer from 'multer';
 import path from 'node:path';
 import fs from 'node:fs/promises';
-import { Property } from './models/property.js';
+import { ObjectId } from 'mongodb';
+import { Property } from './db.js';
 
 const router = express.Router();
 // Configure multer to store uploaded images in the uploads/ directory
 const upload = multer({ dest: 'uploads/' });
+
+function findPropertyById(id) {
+    return Property.findOne({ _id: new ObjectId(id) });
+}
+
+function findComment(property, commentId) {
+    return (property.comments || []).find(c => c._id.toString() === commentId);
+}
 
 // ============================================================================
 // SHARED VALIDATION FUNCTIONS (avoid duplicating code between Create and Edit)
@@ -94,7 +103,7 @@ function validateReviewData(body, property, commentId = null) {
     }
 
     const trimmedAuthor = author.trim().toLowerCase();
-    const duplicateReview = property.comments.some(review =>
+    const duplicateReview = (property.comments || []).some(review =>
         (!commentId || review._id.toString() !== commentId) &&
         (review.name || '').trim().toLowerCase() === trimmedAuthor
     );
@@ -115,7 +124,7 @@ router.get('/', async (req, res) => {
         const perPage = 6; // Maximum 6 properties per page
         const page = Math.max(1, parseInt(req.query.page) || 1);
         const search = req.query.search ? req.query.search.trim() : '';
-        const category = (req.query.type || req.query.category || '').trim();       
+        const category = (req.query.type || req.query.category || '').trim();
         // Build the MongoDB filter if the user searched by text or selected a category
         const filter = {};
         if (search) {
@@ -134,7 +143,7 @@ router.get('/', async (req, res) => {
         const properties = await Property.find(filter)
             .skip((page - 1) * perPage)
             .limit(perPage)
-            .lean();
+            .toArray();
 
         // Use 'category' instead of undefined 'type' variable when building pagination query params
         const querySuffix = `${search ? `&search=${encodeURIComponent(search)}` : ''}${category ? `&type=${encodeURIComponent(category)}` : ''}`;
@@ -161,7 +170,8 @@ router.get('/', async (req, res) => {
             hasPrevPage: page > 1,
             prevPage: page - 1,
             nextPage: page + 1,
-            prevPageUrl: `/?page=${page - 1}${querySuffix}`        });
+            prevPageUrl: `/?page=${page - 1}${querySuffix}`
+        });
     } catch (err) {
         console.error('Error retrieving properties:', err);
         res.status(500).render('error', {
@@ -197,12 +207,23 @@ router.post('/new_property', upload.single('image'), async (req, res) => {
             return formError(validationError);
         }
 
-        const property = await Property.create({ title: title.trim(), category, status, price: Number(price), location: location.trim(), description: description.trim(), bedrooms: Number(bedrooms), area: Number(area), image: req.file.filename });
+        const result = await Property.insertOne({
+            title: title.trim(),
+            category,
+            status,
+            price: Number(price),
+            location: location.trim(),
+            description: description.trim(),
+            bedrooms: Number(bedrooms),
+            area: Number(area),
+            image: req.file.filename,
+            comments: []
+        });
 
         res.render('confirmation', {
             title: 'Property Created',
             message: 'The property has been added successfully.',
-            backUrl: `/property/${property._id}`,
+            backUrl: `/property/${result.insertedId}`,
             backText: 'View Property'
         });
     } catch (err) {
@@ -214,9 +235,6 @@ router.post('/new_property', upload.single('image'), async (req, res) => {
                 console.error('Error removing uploaded image after failed creation:', cleanupError);
             }
         }
-        if (err.name === 'ValidationError') {
-            return formError('Some property fields are not valid. Please review the form.');
-        }
         return formError('An unexpected error occurred while saving the property.', 500);
     }
 });
@@ -224,7 +242,7 @@ router.post('/new_property', upload.single('image'), async (req, res) => {
 //Property detail page route
 router.get('/property/:id', async (req, res) => {
     try {
-        const property = await Property.findById(req.params.id).lean();
+        const property = await findPropertyById(req.params.id);
 
         if (!property) {
             return res.status(404).render('error', {
@@ -262,7 +280,7 @@ router.get('/property/:id', async (req, res) => {
 
 router.get('/property/:id/edit', async (req, res) => {
     try {
-        const property = await Property.findById(req.params.id).lean();
+        const property = await findPropertyById(req.params.id);
         if (!property) {
             return res.status(404).render('error', {
                 errorMessage: 'Property not found.',
@@ -298,7 +316,7 @@ router.get('/property/:id/edit', async (req, res) => {
 
 router.post('/property/:id/edit', upload.single('image'), async (req, res) => {
     try {
-        const property = await Property.findById(req.params.id);
+        const property = await findPropertyById(req.params.id);
         if (!property) {
             if (req.file) await fs.rm(req.file.path, { force: true });
             return res.status(404).render('error', {
@@ -337,7 +355,19 @@ router.post('/property/:id/edit', upload.single('image'), async (req, res) => {
         property.category = req.body.category;
         property.description = req.body.description.trim();
 
-        await property.save();
+        await Property.updateOne({ _id: property._id }, {
+            $set: {
+                title: property.title,
+                location: property.location,
+                bedrooms: property.bedrooms,
+                area: property.area,
+                price: property.price,
+                status: property.status,
+                category: property.category,
+                description: property.description,
+                image: property.image
+            }
+        });
 
         if (oldImagePath) {
             try {
@@ -370,7 +400,7 @@ router.post('/property/:id/edit', upload.single('image'), async (req, res) => {
 
 router.post('/property/:id/delete', async (req, res) => {
     try {
-        const property = await Property.findByIdAndDelete(req.params.id);
+        const property = await findPropertyById(req.params.id);
         if (!property) {
             return res.status(404).render('error', {
                 errorMessage: 'Property not found.',
@@ -378,6 +408,7 @@ router.post('/property/:id/delete', async (req, res) => {
                 backText: 'Back to Home'
             });
         }
+        await Property.deleteOne({ _id: property._id });
 
         // Delete the physical image file from the uploads/ directory
         if (property.image) {
@@ -406,7 +437,7 @@ router.post('/property/:id/delete', async (req, res) => {
 
 router.get('/property/:id/image', async (req, res) => {
     try {
-        const property = await Property.findById(req.params.id);
+        const property = await findPropertyById(req.params.id);
         if (!property || !property.image) {
             return res.status(404).send('Image not found');
         }
@@ -427,7 +458,7 @@ router.get('/property/:id/image', async (req, res) => {
 // Create a new review
 router.post('/property/:id/comment', async (req, res) => {
     try {
-        const property = await Property.findById(req.params.id);
+        const property = await findPropertyById(req.params.id);
         if (!property) {
             return res.status(404).render('error', {
                 errorMessage: 'Property not found.',
@@ -446,13 +477,17 @@ router.post('/property/:id/comment', async (req, res) => {
         }
 
         const trimmedAuthor = req.body.author.trim();
-        property.comments.push({
-            name: trimmedAuthor,
-            date: req.body.date,
-            rating: Number(req.body.rating),
-            text: req.body.comment.trim()
+        await Property.updateOne({ _id: property._id }, {
+            $push: {
+                comments: {
+                    _id: new ObjectId(),
+                    name: trimmedAuthor,
+                    date: req.body.date,
+                    rating: Number(req.body.rating),
+                    text: req.body.comment.trim()
+                }
+            }
         });
-        await property.save();
 
         res.render('confirmation', {
             title: 'Review Submitted',
@@ -473,7 +508,7 @@ router.post('/property/:id/comment', async (req, res) => {
 // Show form to edit an existing review
 router.get('/property/:id/comment/:commentId/edit', async (req, res) => {
     try {
-        const property = await Property.findById(req.params.id).lean();
+        const property = await findPropertyById(req.params.id);
         if (!property) {
             return res.status(404).render('error', {
                 errorMessage: 'Property not found.',
@@ -482,7 +517,7 @@ router.get('/property/:id/comment/:commentId/edit', async (req, res) => {
             });
         }
 
-        const comment = property.comments.find(c => c._id.toString() === req.params.commentId);
+        const comment = findComment(property, req.params.commentId);
         if (!comment) {
             return res.status(404).render('error', {
                 errorMessage: 'Review not found.',
@@ -513,7 +548,7 @@ router.get('/property/:id/comment/:commentId/edit', async (req, res) => {
 // Save updates to an edited review
 router.post('/property/:id/comment/:commentId/edit', async (req, res) => {
     try {
-        const property = await Property.findById(req.params.id);
+        const property = await findPropertyById(req.params.id);
         if (!property) {
             return res.status(404).render('error', {
                 errorMessage: 'Property not found.',
@@ -522,7 +557,7 @@ router.post('/property/:id/comment/:commentId/edit', async (req, res) => {
             });
         }
 
-        const comment = property.comments.id(req.params.commentId);
+        const comment = findComment(property, req.params.commentId);
         if (!comment) {
             return res.status(404).render('error', {
                 errorMessage: 'Review not found.',
@@ -540,12 +575,17 @@ router.post('/property/:id/comment/:commentId/edit', async (req, res) => {
             });
         }
 
-        comment.name = req.body.author.trim();
-        comment.date = req.body.date;
-        comment.rating = Number(req.body.rating);
-        comment.text = req.body.comment.trim();
-
-        await property.save();
+        await Property.updateOne(
+            { _id: property._id, 'comments._id': comment._id },
+            {
+                $set: {
+                    'comments.$.name': req.body.author.trim(),
+                    'comments.$.date': req.body.date,
+                    'comments.$.rating': Number(req.body.rating),
+                    'comments.$.text': req.body.comment.trim()
+                }
+            }
+        );
 
         res.render('confirmation', {
             title: 'Review Updated',
@@ -566,7 +606,7 @@ router.post('/property/:id/comment/:commentId/edit', async (req, res) => {
 // Delete a review
 router.post('/property/:id/comment/:commentId/delete', async (req, res) => {
     try {
-        const property = await Property.findById(req.params.id);
+        const property = await findPropertyById(req.params.id);
         if (!property) {
             return res.status(404).render('error', {
                 errorMessage: 'Property not found.',
@@ -575,7 +615,7 @@ router.post('/property/:id/comment/:commentId/delete', async (req, res) => {
             });
         }
 
-        const comment = property.comments.id(req.params.commentId);
+        const comment = findComment(property, req.params.commentId);
         if (!comment) {
             return res.status(404).render('error', {
                 errorMessage: 'Review not found.',
@@ -584,8 +624,8 @@ router.post('/property/:id/comment/:commentId/delete', async (req, res) => {
             });
         }
 
-        comment.deleteOne(); // Remove the subdocument from the Mongoose comments array
-        await property.save();
+        // Remove the review from the comments array
+        await Property.updateOne({ _id: property._id }, { $pull: { comments: { _id: comment._id } } });
 
         res.render('confirmation', {
             title: 'Review Deleted',
