@@ -1,10 +1,38 @@
 import mongoose from 'mongoose';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { Property } from './models/property.js';
+
+const __filename= fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Ensure uploads/ exists and copy sample images from public/images if missing
+function ensureSampleImages() {
+    const sourceDir = path.join(__dirname, '..', 'public', 'images');
+    const uploadsDir = path.join(__dirname, '..', 'uploads');
+
+    if (!fs.existsSync(uploadsDir)) {
+        fs.mkdirSync(uploadsDir, { recursive: true });
+    }
+    for (let i = 1; i <= 9; i++) {
+        const fileName = `property${i}.jpg`;
+        const srcPath = path.join(sourceDir, fileName);
+        const destPath = path.join(uploadsDir, fileName);
+
+        if (fs.existsSync(srcPath) && !fs.existsSync(destPath)) {
+            fs.copyFileSync(srcPath, destPath);
+            console.log(`Copied sample image to uploads: ${fileName}`);
+        }
+    }
+}
 
 export async function connectDB() {
     try {
         await mongoose.connect('mongodb://127.0.0.1:27017/dreamhouse');
         console.log('Connected to local MongoDB');
+
+        ensureSampleImages();
 
         const count = await Property.countDocuments();
         if (count === 0) {
