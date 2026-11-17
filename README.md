@@ -158,6 +158,7 @@ Where I added the initial configuration and the link to Trello, and documented m
 * [`README.md`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/README.md): I documented my participation.
 
 ## PRACTICE 2
+**Demo video:** https://youtu.be/gKMw7ZnqBAw
 
 ### Execution Instructions
 
@@ -275,3 +276,21 @@ The first time the application starts, it inserts 9 sample properties with their
 * [views/header.html](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/views/header.html): Header partial with only the navbar and the banner.
 * [views/index.html](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/views/index.html): Pagination links that keep the search and the category.
 * [README.md](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/README.md): Run instructions, demo steps and my participation.
+
+#### Participation of Paula Sánchez Garduño
+**Description of tasks performed:**
+During this phase I was responsible of setting up the common headers and footers to be used with mustache, setting up the database, migrating from mongoose to mongoDB, creating the property creation and edition backend, creating the example entities and fixing any remaining errors or broken code.
+
+**The 5 most significant commits:**
+* [Changed, package.json y package-lock.json to use mongoDB instead of mongoose](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/0ec8a9e67cc77b38b5878259d3952c967a10b5ce): Changed the project to use MongoDB instead of MongoDB with Mongoose to follow the subjects guidelines
+* [New property backend added](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/7fe6d44fc5c2e6b0a4a947f5670088084699f2f1): Added the functions to create a new property using the creation form
+* [Changed the error with routes in the header and images, added the remaining properties and property fields to db](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/6846c5608758b48a4599692cbe65a9145185066c): Fixed the errors with routes that broke the app and added the examples to the database initialization
+* [separated the header and added comments as a schema for the db](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/9dff9b9f6f9c96c60531a990912816df4b258e7e): Separated header to be inserted into every page with mustache and declared the schema of the secondary entities (comments) in db.js
+
+**The 5 files I have contributed to the most:**
+
+* [src/router.js](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/src/router.js): Simplified functions, adapted it to the MongoDB syntax, added property creation and viewing and fixed the broken arguments
+* [src/db.js](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/src/db.js): Added the examples, updated to mongoDB and added property creation
+* [views/header.html](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/views/header.html): Created the header from other pages headers
+* [views/index.html](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/views/index.html): Fixed the broken links
+* [views/new_property.html](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/new_property.html): Fixed the broken arguments that made it so validation failed
