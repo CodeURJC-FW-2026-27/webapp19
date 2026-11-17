@@ -88,7 +88,7 @@
                                             accept="image/*" aria-describedby="propertyImageHelp"
                                             {{^isEdit}}required{{/isEdit}} />
                                         {{#isEdit}}
-                                        <img src="/property/{{property._id}}/image" class="img-thumbnail mt-2"
+                                        <img src="/uploads/{{property.image}}" class="img-thumbnail mt-2"
                                             alt="Current image for {{property.title}}" style="max-width: 200px;" />
                                         {{/isEdit}}
                                         <div id="propertyImageHelp" class="form-text">Select an image file for this

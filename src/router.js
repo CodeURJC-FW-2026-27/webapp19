@@ -432,26 +432,6 @@ router.post('/property/:id/delete', async (req, res) => {
 });
 
 // ============================================================================
-// DOWNLOAD IMAGE FROM uploads/
-// ============================================================================
-
-router.get('/property/:id/image', async (req, res) => {
-    try {
-        const property = await findPropertyById(req.params.id);
-        if (!property || !property.image) {
-            return res.status(404).send('Image not found');
-        }
-
-        const filename = path.basename(property.image);
-        const imagePath = path.resolve('uploads', filename);
-        res.download(imagePath);
-    } catch (err) {
-        console.error('Error downloading property image:', err);
-        res.status(500).send('Error retrieving image');
-    }
-});
-
-// ============================================================================
 // REVIEWS / COMMENTS (Create, Edit, and Delete)
 // ============================================================================
 

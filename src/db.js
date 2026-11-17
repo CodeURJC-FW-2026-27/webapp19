@@ -1,30 +1,15 @@
 import { MongoClient, ObjectId } from 'mongodb';
 import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
 
 const client = new MongoClient('mongodb://127.0.0.1:27017');
 export let Property;
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Ensure uploads/ exists and copy sample images from public/images if missing
-function ensureSampleImages() {
-    const sourceDir = path.join(__dirname, '..', 'public', 'images');
-    const uploadsDir = path.join(__dirname, '..', 'uploads');
-
-    if (!fs.existsSync(uploadsDir)) {
-        fs.mkdirSync(uploadsDir, { recursive: true });
-    }
-    for (let i = 1; i <= 9; i++) {
-        const fileName = `property${i}.jpg`;
-        const srcPath = path.join(sourceDir, fileName);
-        const destPath = path.join(uploadsDir, fileName);
-
-        if (fs.existsSync(srcPath) && !fs.existsSync(destPath)) {
-            fs.copyFileSync(srcPath, destPath);
-            console.log(`Copied sample image to uploads: ${fileName}`);
+// Copy the images from data/ to uploads/ if they are not there yet
+function copyImages() {
+    fs.mkdirSync('uploads', { recursive: true });
+    for (const file of fs.readdirSync('data')) {
+        if (!fs.existsSync('uploads/' + file)) {
+            fs.copyFileSync('data/' + file, 'uploads/' + file);
         }
     }
 }
@@ -35,7 +20,7 @@ export async function connectDB() {
         Property = client.db('dreamhouse').collection('properties');
         console.log('Connected to local MongoDB');
 
-        ensureSampleImages();
+        copyImages();
 
         const count = await Property.countDocuments();
         if (count === 0) {
