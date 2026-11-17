@@ -45,7 +45,7 @@
 * **Search Engine**: A text input box allowing users to search for properties whose title or location contains the specified query string.
 * **Categorization:** Properties are categorized by price ranges, location zones, or the number of rooms, accessible from the navigation menu. 
 
-## Practice 1
+## PRACTICE 1
 
 ### Screenshots
 
@@ -68,9 +68,9 @@ These are the screenshots for the 3 parts required:
 ![New property page](screenshots/new-property.png)
 ![New property page 2](screenshots/new-property2.png)
 
-### Member participation
+### Member participation in practice 1
 
-#### Participation of Paula Sánchez Garduño
+##### Participation of Paula Sánchez Garduño
 
 **Description of tasks performed:**
 
@@ -99,7 +99,7 @@ For the additional style adjustments I had to make to the template.
 * [`README.md`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/README.md)
 Where I added the initial configuration and the link to Trello, and documented my part of the work.
 
-#### Participation of Diego Rodríguez Salinas
+##### Participation of Diego Rodríguez Salinas
 
 **Description of tasks performed:**
 
@@ -121,7 +121,7 @@ Where I added the initial configuration and the link to Trello, and documented m
 * [`new_property.html`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/new_property.html): Created the property form and its page layout.
 * [`property_detail.html`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/property_detail.html): Fixed the duplicated property image and details, corrected the area to match the home page, and applied cover cropping.
 
-#### Participation of Rodrigo Fernández de Córdoba García
+##### Participation of Rodrigo Fernández de Córdoba García
 * In this phase of the project, I mostly focused on the entity page. In the first part, when deciding the theme and structure, I proposed the theme and filters for the page. For the rest of the project I focused on creating the secondary entity page, adapting it to the template and fixing other CSS issues. The commits made were only 2, but the focus was on having each commit deliver a finished part instead of non functional pieces
 
 **The most significant commits:**
@@ -135,7 +135,7 @@ Where I added the initial configuration and the link to Trello, and documented m
 * [`index.html`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/index.html): Fixed CSS issues
 * [`property_detail.html](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/new_property.html): Created the page and adapted it to the template
 
-#### Participation of Enrique Aldama Moradillo
+##### Participation of Enrique Aldama Moradillo
 
 **Description of tasks performed:**
 
@@ -156,3 +156,24 @@ Where I added the initial configuration and the link to Trello, and documented m
 * [`new_property.html`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/new_property.html): I linked `custom.css`, fixed the category typo, added validation limits to price, area and description, and increased the spacing between the header and the form.
 * [`custom.css`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/css/custom.css): I created this file for the project's own styles (same height for all card images).
 * [`README.md`](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/README.md): I documented my participation.
+
+## PRACTICE 2
+### Member participation in practice 2
+###### Participation of Paula Sánchez Garduño
+
+**Description of tasks performed:**
+* During Practice 2, I was responsible for setting up the server architecture and migrating the static frontend into a dynamic Node.js and Express web application connected to MongoDB. I restructured the project folders (`src/`, `views/`, `public/`), configured Mustache templates along with reusable partials (`header.html`, `footer.html`, `confirmation.html`, and `error.html`), and updated the data models to named ESM exports. On the backend, I implemented server-side pagination (6 items per page), full search and category filtering in the main route, and the complete creation, editing, deletion, and server-side validation logic for both properties and reviews. Finally, I configured Multer to handle image uploads into the `uploads/` folder and updated `db.js` to automatically seed sample reviews and copy initial property images on startup.
+
+**The 5 most significant commits:**
+* [Refactor project structure and setup Express server with static files support](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/e292ae94c535a491bef84e4a54a6e57b4ffcd079): Reorganized the repository structure and configured the Express server with Mustache rendering and static asset serving.
+* [Implement server-side pagination logic in router](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/8e881fbd5ff97c38d0d3febe1383c3954d50c8ab): Added backend pagination logic in `router.js` to display 6 properties per page and generate page navigation links.
+* [Implement dynamic stars rendering and review comment creation route](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/f51f49c89ff1770d522a733a9d3c3a8e2bc96cce): Built the dynamic star-rating mapping for Mustache and the POST route to store new property reviews in MongoDB.
+* [Implement CRUD routes, validation, search/filter, and image handling for properties and reviews](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/ed8da53d2c0c20995f5fd05d23c136dd4fc0477d): Implemented full creation, editing, deletion, server-side validation, and image cleanup logic for both main and secondary entities.
+* [Add search and category filtering with pagination support in main route](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/c02500106430e4e52cc2be8515d4612db2b0cbea): Integrated text search and category filtering in the home route while keeping active query parameters across pagination links.
+
+**The 5 files I have contributed to the most:**
+* [src/router.js](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/src/router.js): Implemented all application routes, pagination, search and category filtering, Multer image handling, server-side validations, and full create/edit/delete operations for properties and reviews.
+* [views/index.html](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/views/index.html): Converted the home catalog into a dynamic Mustache view and integrated the server-side pagination UI controls.
+* [views/property_detail.html](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/views/property_detail.html): Integrated dynamic Mustache fields, dynamic star ratings, action buttons, and the review submission section.
+* [src/db.js](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/src/db.js): Standardized connection logs in English, seeded initial sample reviews on properties, and added startup logic to copy sample images into `uploads/`.
+* [views/header.html](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/views/header.html): Extracted the navigation bar as a reusable Mustache partial and connected the search bar and category links to the backend filters.
