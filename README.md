@@ -177,3 +177,22 @@ Where I added the initial configuration and the link to Trello, and documented m
 * [views/property_detail.html](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/views/property_detail.html): Integrated dynamic Mustache fields, dynamic star ratings, action buttons, and the review submission section.
 * [src/db.js](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/src/db.js): Standardized connection logs in English, seeded initial sample reviews on properties, and added startup logic to copy sample images into `uploads/`.
 * [views/header.html](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/views/header.html): Extracted the navigation bar as a reusable Mustache partial and connected the search bar and category links to the backend filters.
+
+#### Participation of Diego Rodríguez Salinas
+
+**Description of tasks performed:**
+* During Practice 2, I implemented the property creation and editing flows using a reusable form. I added server-side validation, handled uploaded images, and ensured that editing a property kept its current image when no replacement was selected. I also implemented review editing, connected the review edit and delete buttons, and added validation to prevent the same author from submitting multiple reviews for one property.
+
+**The 5 most significant commits:**
+* [Complete property creation and reusable form](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/885f779a09772ee084993458781911faa8800675): Reused the property form for creation and editing and connected server-side validation with image upload handling.
+* [Align property editing with the current schema](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/108d7cfec9f183d35fba82311fa394a2bb045866): Updated property editing to use the current fields and categories, while preserving or replacing the property image as appropriate.
+* [Add review validation and edit form](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/78090cb3dbbbb3ae2d222225eec42c39a505a20c): Added review validation and created a form prefilled with the review being edited.
+* [Connect review edit and delete buttons](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/e986506e295f357cafd71754e51e2e0df133e303): Connected the review edit and delete controls on the property detail page to their server routes.
+* [Fix duplicated authors in reviews](https://github.com/CodeURJC-FW-2026-27/webapp19/commit/c8c65c696da0bf08046dd9901467211e4be28f5b): Prevented an author from submitting more than one review for the same property.
+
+**The 5 files I have contributed to the most:**
+* [src/router.js](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/src/router.js): Added property creation and editing validation, review validation and routes, and image handling for property updates.
+* [views/new_property.html](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/views/new_property.html): Adapted the property form to support both creating and editing a property.
+* [views/edit_comment.html](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/views/edit_comment.html): Created the form for editing an existing review.
+* [views/property_detail.html](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/views/property_detail.html): Connected the review edit and delete buttons to their routes.
+* [README.md](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/README.md): Documented my Practice 2 tasks and linked my most significant commits.
