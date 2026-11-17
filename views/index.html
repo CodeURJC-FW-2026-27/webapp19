@@ -72,7 +72,7 @@
                     <!--Previous page button -->
                     {{#hasPrevPage}}
                     <li class="page-item">
-                        <a class="page-link" href="/?page={{prevPage}}" aria-label="Previous">
+                        <a class="page-link" href="{{prevPageUrl}}" aria-label="Previous">
                             <span aria-hidden="true">&laquo; Previous </span>
                         </a>
                     </li>
@@ -92,7 +92,7 @@
                         {{/isCurrent}}
                         {{^isCurrent}}
                         <li class="page-item">
-                            <a class="page-link" href="/?page={{number}}">{{number}}</a>
+                            <a class="page-link" href="{{url}}">{{number}}</a>
                         </li>
                         {{/isCurrent}}
                     {{/pages}}
@@ -100,7 +100,7 @@
                     <!-- Next page button-->
                      {{#hasNextPage}}
                      <li class="page-item">
-                        <a class="page-link" href="/?page={{nextPage}}" aria-label="Next">
+                        <a class="page-link" href="{{nextPageUrl}}" aria-label="Next">
                             <span aria-hidden="true">Next &raquo;</span>
                         </a>
                      </li>

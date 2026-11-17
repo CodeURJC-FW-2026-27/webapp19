@@ -168,8 +168,6 @@ router.get('/', async (req, res) => {
             hasNextPage: page < totalPages,
             nextPageUrl: `/?page=${page + 1}${querySuffix}`,
             hasPrevPage: page > 1,
-            prevPage: page - 1,
-            nextPage: page + 1,
             prevPageUrl: `/?page=${page - 1}${querySuffix}`
         });
     } catch (err) {
@@ -300,9 +298,9 @@ router.get('/property/:id/edit', async (req, res) => {
             // Helper booleans so Mustache marks the matching <option> as 'selected'
             isAvailable: property.status === 'Available',
             isRented: property.status === 'Rented',
-            isSharedApartment: property.category === 'Shared Apartment',
-            isFullHouse: property.category === 'Full House',
-            isRoom: property.category === 'Room'
+            isSelShared: property.category === 'Shared Apartment',
+            isSelHouse: property.category === 'Full House',
+            isSelRoom: property.category === 'Room'
         });
     } catch (err) {
         console.error('Error loading edit property form:', err);

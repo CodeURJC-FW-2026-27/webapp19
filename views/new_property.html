@@ -38,9 +38,9 @@
                                             <label for="propertyCategory" class="form-label">Category</label>
                                             <select class="form-select" id="propertyCategory" name="category" required>
                                                 <option value="" disabled {{^isEdit}}selected{{/isEdit}}>Select category...</option>
-                                                <option value="Shared Apartment" {{#isSharedApartment}}selected{{/isSharedApartment}}>Shared Apartment</option>
-                                                <option value="Full House" {{#isFullHouse}}selected{{/isFullHouse}}>Full House</option>
-                                                <option value="Room" {{#isRoom}}selected{{/isRoom}}>Room</option>
+                                                <option value="Shared Apartment" {{#isSelShared}}selected{{/isSelShared}}>Shared Apartment</option>
+                                                <option value="Full House" {{#isSelHouse}}selected{{/isSelHouse}}>Full House</option>
+                                                <option value="Room" {{#isSelRoom}}selected{{/isSelRoom}}>Room</option>
                                             </select>
                                         </div>
                                         <div class="col-md-6 mb-3">

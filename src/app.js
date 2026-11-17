@@ -8,6 +8,8 @@ const app = express();
 app.use(express.static('./public'));
 app.use('/uploads', express.static('./uploads'));
 
+app.locals.isAllTypes = true;
+
 app.set('view engine', 'html');
 app.engine('html', mustacheExpress(), '.html');
 app.set('views', './views');
