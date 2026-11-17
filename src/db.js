@@ -4,7 +4,7 @@ import { Property } from './models/property.js';
 export async function connectDB() {
     try {
         await mongoose.connect('mongodb://127.0.0.1:27017/dreamhouse');
-        console.log('Conectado a MongoDB local');
+        console.log('Connected to local MongoDB');
 
         const count = await Property.countDocuments();
         if (count === 0) {
@@ -19,10 +19,10 @@ export async function connectDB() {
                 { title: 'C. Princesa 31', location: 'Moncloa, Madrid', bedrooms: 2, area: 65, price: 900, status: 'Available', category: 'Shared Apartment', image: 'property8.jpg', description: 'TODO' },
                 { title: 'C. Gran Vía 12', location: 'Centro, Madrid', bedrooms: 1, area: 40, price: 810, status: 'Available', category: 'Room', image: 'property9.jpg', description: 'TODO' }
             ]);
-            console.log('Datos iniciales insertados en MongoDB');
+            console.log('Initial data inserted into MongoDB');
         }
     } catch (err) {
-        console.log('Error al conectar a MongoDB:', err);
+        console.log('Error connecting to MongoDB:', err);
     }
 
 }
