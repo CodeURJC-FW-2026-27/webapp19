@@ -277,7 +277,7 @@ The first time the application starts, it inserts 9 sample properties with their
 * [views/index.html](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/views/index.html): Pagination links that keep the search and the category.
 * [README.md](https://github.com/CodeURJC-FW-2026-27/webapp19/blob/main/README.md): Run instructions, demo steps and my participation.
 
-#### Participation of Paula Sánchez Garduño
+#### Participation of Rodrigo Fernández de Córdoba García
 **Description of tasks performed:**
 During this phase I was responsible of setting up the common headers and footers to be used with mustache, setting up the database, migrating from mongoose to mongoDB, creating the property creation and edition backend, creating the example entities and fixing any remaining errors or broken code.
 
