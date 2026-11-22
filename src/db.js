@@ -2,7 +2,7 @@ import { MongoClient, ObjectId } from 'mongodb';
 import fs from 'fs';
 
 const client = new MongoClient('mongodb://127.0.0.1:27017');
-export let Property;
+export let properties;
 
 // Copy the images from data/ to uploads/ if they are not there yet
 function copyImages() {
@@ -17,12 +17,12 @@ function copyImages() {
 export async function connectDB() {
     try {
         await client.connect();
-        Property = client.db('dreamhouse').collection('properties');
+        properties = client.db('dreamhouse').collection('properties');
         console.log('Connected to local MongoDB');
 
         copyImages();
 
-        const count = await Property.countDocuments();
+        const count = await properties.countDocuments();
         if (count === 0) {
             const rawData = fs.readFileSync('data/properties.json', 'utf8');
             const properties = JSON.parse(rawData);
@@ -33,7 +33,7 @@ export async function connectDB() {
                 }
             }
 
-            await Property.insertMany(properties);
+            await properties.insertMany(properties);
             console.log('Initial properties and sample reviews inserted into MongoDB');
         }
     } catch (err) {

@@ -3,7 +3,7 @@ import multer from 'multer';
 import path from 'node:path';
 import fs from 'node:fs/promises';
 import { ObjectId } from 'mongodb';
-import { Property } from './db.js';
+import { properties  } from './db.js';
 
 const router = express.Router();
 
@@ -23,7 +23,7 @@ function renderConfirmation(res, title, message, backUrl, backText) {
 }
 
 function findPropertyById(id) {
-    return Property.findOne({ _id: new ObjectId(id) });
+    return properties.findOne({ _id: new ObjectId(id) });
 }
 
 function findReview(property, reviewId) {
@@ -64,7 +64,7 @@ async function validateProperty(body, file, property) {
     }
 
     // When editing, the property can keep its own title
-    const sameTitle = await Property.findOne({
+    const sameTitle = await properties.findOne({
         title: title.trim(),
         _id: { $ne: property ? property._id : null }
     });
@@ -153,9 +153,9 @@ router.get('/', async (req, res) => {
             filter.category = category;
         }
 
-        const totalProperties = await Property.countDocuments(filter);
+        const totalProperties = await properties.countDocuments(filter);
         const totalPages = Math.max(1, Math.ceil(totalProperties / perPage));
-        const properties = await Property.find(filter)
+        const properties = await properties.find(filter)
             .skip((page - 1) * perPage)
             .limit(perPage)
             .toArray();
@@ -217,7 +217,7 @@ router.post('/new_property', upload.single('image'), async (req, res) => {
         const property = getPropertyData(req.body);
         property.image = req.file.filename;
         property.reviews = [];
-        const result = await Property.insertOne(property);
+        const result = await properties.insertOne(property);
 
         renderConfirmation(res, 'Property Created', 'The property has been added successfully.',
             `/property/${result.insertedId}`, 'View Property');
@@ -297,7 +297,7 @@ router.post('/property/:id/edit', upload.single('image'), async (req, res) => {
         if (req.file) {
             newData.image = req.file.filename;
         }
-        await Property.updateOne({ _id: property._id }, { $set: newData });
+        await properties.updateOne({ _id: property._id }, { $set: newData });
 
         // The old image is not needed anymore
         if (req.file) {
@@ -321,7 +321,7 @@ router.post('/property/:id/delete', async (req, res) => {
             return renderError(res, 404, 'Property not found.', '/', 'Back to Home');
         }
 
-        await Property.deleteOne({ _id: property._id });
+        await properties.deleteOne({ _id: property._id });
         await deleteImage(property.image);
 
         renderConfirmation(res, 'Property Deleted', 'The property has been deleted successfully.',
@@ -349,7 +349,7 @@ router.post('/property/:id/review', async (req, res) => {
             return renderError(res, 400, errorMsg, `/property/${property._id}`, 'Back to Property');
         }
 
-        await Property.updateOne({ _id: property._id }, {
+        await properties.updateOne({ _id: property._id }, {
             $push: {
                 reviews: {
                     _id: new ObjectId(),
@@ -414,7 +414,7 @@ router.post('/property/:id/review/:reviewId/edit', async (req, res) => {
                 `/property/${property._id}/review/${review._id}/edit`, 'Back to Edit Review');
         }
 
-        await Property.updateOne(
+        await properties.updateOne(
             { _id: property._id, 'reviews._id': review._id },
             {
                 $set: {
@@ -447,7 +447,7 @@ router.post('/property/:id/review/:reviewId/delete', async (req, res) => {
             return renderError(res, 404, 'Review not found.', `/property/${property._id}`, 'Back to Property');
         }
 
-        await Property.updateOne({ _id: property._id }, { $pull: { reviews: { _id: review._id } } });
+        await properties.updateOne({ _id: property._id }, { $pull: { reviews: { _id: review._id } } });
 
         renderConfirmation(res, 'Review Deleted', 'The review has been deleted successfully.',
             `/property/${property._id}`, 'Back to Property Details');
